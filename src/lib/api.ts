@@ -22,13 +22,29 @@ export interface CheckerAnnotations {
 
 export type ToolAnnotations = Record<string, CheckerAnnotations>;
 
+type StaticAnnotations = Record<string, ToolAnnotations>;
+
+async function fetchStaticToolAnnotations(tool: string): Promise<ToolAnnotations> {
+    const res = await fetch(buildApiUrl("output/.cache/annotations.json"));
+    if (!res.ok) {
+        throw new Error(`Failed to fetch static annotations for ${tool}`);
+    }
+    const payload = (await res.json()) as StaticAnnotations;
+    return payload[tool] ?? {};
+}
+
 export async function fetchToolAnnotations(tool: string): Promise<ToolAnnotations> {
     const url = buildApiUrl(`api/annotations?tool=${encodeURIComponent(tool)}`);
-    const res = await fetch(url);
-    if (!res.ok) {
-        throw new Error(`Failed to fetch annotations for ${tool}`);
+    try {
+        const res = await fetch(url);
+        const contentType = res.headers.get("content-type") || "";
+        if (!res.ok || contentType.includes("text/html")) {
+            return fetchStaticToolAnnotations(tool);
+        }
+        return res.json();
+    } catch {
+        return fetchStaticToolAnnotations(tool);
     }
-    return res.json();
 }
 
 export async function saveAnnotation(
