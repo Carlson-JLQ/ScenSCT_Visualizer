@@ -1,0 +1,26 @@
+{
+    "status": true,
+    "report_files": [
+        "src/main/java/scensct/core/pos/PosCase2.java",
+        "src/main/java/scensct/var/pos/PosCase2_Var1.java",
+        "src/main/java/scensct/var/pos/PosCase2_Var2.java",
+        "src/main/java/scensct/var/pos/PosCase2_Var3.java",
+        "src/main/java/scensct/var/pos/PosCase2_Var4.java",
+        "src/main/java/scensct/var/pos/PosCase2_Var5.java",
+        "src/main/java/scensct/core/pos/PosCase3.java",
+        "src/main/java/scensct/var/pos/PosCase3_Var3.java",
+        "src/main/java/scensct/var/pos/PosCase3_Var4.java",
+        "src/main/java/scensct/var/pos/PosCase3_Var5.java"
+    ],
+    "pass_files": [
+        "src/main/java/scensct/core/neg/NegCase1.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var1.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var2.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var3.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var4.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var5.java",
+        "src/main/java/scensct/core/pos/PosCase1.java",
+        "src/main/java/scensct/var/pos/PosCase3_Var1.java",
+        "src/main/java/scensct/var/pos/PosCase3_Var2.java"
+    ]
+}

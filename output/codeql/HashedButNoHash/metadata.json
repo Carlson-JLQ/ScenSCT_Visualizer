@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Comparison/HashedButNoHash.ql",
+    "checker_desc": "This checker detects when a type that defines an equals method but no hashCode method is used in a hashing data structure (like HashSet or HashMap).",
+    "checker_dsl": "EXISTS (`expression E`, `reference type T`) {\n  AND {\n    (`E is used in a hashing data structure context for type T`),\n    (`the source class declaration of T defines an equals method but no hashCode method`)\n  }\n}"
+}

@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-312/CleartextStorageCookie.ql",
+    "checker_desc": "This checker detects storing sensitive data in a cleartext cookie by identifying when sensitive data flows into a Cookie constructor argument and that cookie is subsequently added to an HttpServletResponse.",
+    "checker_dsl": "EXISTS (`Cookie instance CI`, `Expression input`, `Expression store`, `SensitiveSource data`) {\n  AND {\n    (`CI is a constructor call for class javax.servlet.http.Cookie or jakarta.servlet.http.Cookie`),\n    (`input is the second argument (index 1) of CI`),\n    (`data flows to input`),\n    EXISTS (`MethodCall MC`, `Method M`) {\n      AND {\n        (`MC calls method M`),\n        (`M has name \"addCookie\"`),\n        (`M is declared in type javax.servlet.http.HttpServletResponse or jakarta.servlet.http.HttpServletResponse`),\n        (`store = MC`),\n        (`CI equals one argument of MC`),\n        (`there is data flow from CI to the DataFlow node representing that argument of MC`)\n      }\n    }\n  }\n}"
+}

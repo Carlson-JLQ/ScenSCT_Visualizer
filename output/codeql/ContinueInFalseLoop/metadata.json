@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Statements/ContinueInFalseLoop.ql",
+    "checker_desc": "This checker detects a 'continue' statement inside a 'do' loop whose condition is always false, meaning the continue will never actually re-run the loop body.",
+    "checker_dsl": "EXISTS (`DoStmt DS`, `ContinueStmt CS`) {\n  AND {\n    (`the condition of DS is a BooleanLiteral`),\n    (`the boolean value of that BooleanLiteral is false`),\n    (`the target of CS is DS`)\n  }\n}"
+}

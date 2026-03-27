@@ -1,0 +1,67 @@
+{
+  "StringLiteralEqualityCheck": {
+    "pos": [
+      "A Java method containing an equality operator (== or !=) where one operand is, or is derived via string concatenation from, a string literal or text block literal."
+    ],
+    "neg": [
+      "A Java source file containing an equality operator (== or !=) where neither the operator itself nor any expression reachable via the first operand of string concatenation (PLUS) has a direct string literal child."
+    ]
+  },
+  "FallThroughCheck": {
+    "pos": [
+      "A switch case group containing a statement list that lacks a terminating statement (break, return, throw, continue, or a non-returning method call), and this case group is not the last in the switch, allowing execution to fall through to the next case. No specific comment pattern is present to indicate intentional fall-through."
+    ],
+    "neg": [
+      "A switch case group that contains a statement list whose last statement is a terminating statement (break, return, continue, throw, or a method call that never returns normally).",
+      "A switch case group that has no statement list (e.g., an empty case or a case that directly contains another case label).",
+      "A switch case group that contains a non-terminated statement list and is not the last case group, but has a relief comment (e.g., \"fall through\") on the same line after its last statement.",
+      "A switch case group that contains a non-terminated statement list and is not the last case group, but the immediately following case group has a relief comment (e.g., \"fall through\") on the same line as its first token."
+    ]
+  },
+  "MissingSwitchDefaultCheck": {
+    "pos": [
+      "A switch statement with only non-empty case labels (constant expressions, not pattern cases), no default case, and not directly inside a block, if, else, do, while, for, or labeled statement.",
+      "A switch statement with at least one empty case label (e.g., `case:`), no default case, and not directly inside a block, if, else, do, while, for, or labeled statement.",
+      "A switch statement with a mix of empty case labels and non-empty case labels (constant expressions), no default case, and not directly inside a block, if, else, do, while, for, or labeled statement.",
+      "A switch statement (not an expression) that lacks a `default` case label, pattern case labels, and a `case null` label, and is placed within a block or control flow statement (e.g., inside an `if`, `while`, `for`, `do`, `else`, or labeled statement)."
+    ],
+    "neg": [
+      "A switch statement (not an expression) that includes a `default` case label.",
+      "A switch statement (not an expression) that lacks a `default` case label and pattern case labels, but contains a `case null` label.",
+      "A switch statement (not an expression) that lacks a `default` case label but contains at least one pattern case label (e.g., type pattern or record pattern)."
+    ]
+  },
+  "SuperCloneCheck": {
+    "pos": [
+      "A non-native clone() method with an empty parameter list where the method body does not contain a call to super.clone(). The body may contain literals (e.g., string constants, numbers) but no super.clone() invocation."
+    ],
+    "neg": [
+      "A class contains a method with any name other than \"clone\".",
+      "A class contains a native method named \"clone\".",
+      "A class contains a non-native method named \"clone\" that has one or more parameters.",
+      "A class contains a non-native, zero-parameter method named \"clone\" that includes a call to super.clone() (or a qualified clone call).",
+      "A class contains a non-native, zero-parameter method named \"clone\" that includes a literal \"clone\" used in a context that is not a method call with \"clone\" as the immediately following token (e.g., as part of a field access like obj.clone.something), and the literal's parent node has no arguments."
+    ]
+  },
+  "EqualsHashCodeCheck": {
+    "pos": [
+      "A class defines a concrete `equals(Object)` method and does not define any method named `hashCode` (but may have other methods).",
+      "A class defines a native `equals(Object)` method and does not define any method named `hashCode` (but may have other methods).",
+      "A class defines a concrete `equals(Object)` method and any `hashCode` method defined (if present) has one or more parameters (i.e., no valid zero-parameter `hashCode`).",
+      "A class defines a native `equals(Object)` method and any `hashCode` method defined (if present) has one or more parameters (i.e., no valid zero-parameter `hashCode`).",
+      "A class defines a concrete `equals(Object)` method and any zero-parameter `hashCode` method defined (if present) is abstract (no body, not native).",
+      "A class defines a native `equals(Object)` method and any zero-parameter `hashCode` method defined (if present) is abstract (no body, not native)."
+    ],
+    "neg": [
+      "A class contains a concrete or native `hashCode` method and a concrete `equals` method (with one Object parameter).",
+      "A class contains a concrete or native `hashCode` method and a native `equals` method (with one Object parameter).",
+      "A class contains an abstract method named \"equals\" with exactly one parameter of type `Object` or `java.lang.Object`.",
+      "A class contains an abstract method named \"hashCode\" with zero parameters.",
+      "A class contains a method named \"equals\" that does not have exactly one parameter.",
+      "A class contains a method named \"equals\" with exactly one parameter, and the parameter's type is not `Object` or `java.lang.Object`.",
+      "A class contains a method named \"hashCode\" that does not have zero parameters.",
+      "A class contains a method whose name is not \"equals\".",
+      "A class contains a method whose name is not \"hashCode\"."
+    ]
+  }
+}

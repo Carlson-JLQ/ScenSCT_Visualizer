@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Likely Typos/StringBufferCharInit.ql",
+    "checker_desc": "This checker detects when a character value is passed as the first argument to a new StringBuffer or StringBuilder constructor, which is interpreted as the initial capacity rather than a character to append.",
+    "checker_dsl": "EXISTS (`constructor call CC`) {\n  AND {\n    (`CC constructs an object of type StringBuffer or StringBuilder`),\n    (`the first argument of CC has type named \"char\"`)\n  }\n}"
+}

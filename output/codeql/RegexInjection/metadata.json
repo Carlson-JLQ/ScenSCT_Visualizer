@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-730/RegexInjection.ql",
+    "checker_desc": "This checker detects regular expression injection vulnerabilities where user-provided input flows unsanitized into a regular expression pattern compilation.",
+    "checker_dsl": "EXISTS (`taint source node SRC`, `taint sink node SINK`) {\n  AND {\n    (`SRC is an instance of ActiveThreatModelSource (representing user-provided input)`),\n    (`SINK is an instance of RegexInjectionSink (representing regular expression pattern construction/compilation)`),\n    EXISTS (`taint flow path PATH`) {\n      AND {\n        (`PATH starts at source node SRC`),\n        (`PATH ends at sink node SINK`),\n        FORALL (`node N on PATH`) {\n          NOT { (`N is an instance of RegexInjectionSanitizer (a sanitizing operation that stops taint flow)`) }\n        }\n      }\n    }\n  }\n}"
+}

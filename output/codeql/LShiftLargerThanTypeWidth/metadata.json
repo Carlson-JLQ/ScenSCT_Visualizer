@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Arithmetic/LShiftLargerThanTypeWidth.ql",
+    "checker_desc": "This checker detects left-shift expressions where the shift amount (right operand) is a compile-time constant integer that is greater than or equal to the bit width of the left operand's integral type, which causes the shift amount to be truncated modulo the type width.",
+    "checker_dsl": "EXISTS (`left shift expression LSE`) {\n  AND {\n    (`the type of the left operand of LSE is IT`),\n    (`the right operand of LSE is a compile-time constant expression and its integer value is V`),\n    EXISTS (`integer bit width W`) {\n      OR {\n        AND {\n          (`IT has the name \"long\"`),\n          (`W is 64`)\n        },\n        AND {\n          NOT { (`IT has the name \"long\"`) },\n          NOT { (`IT has the name \"Long\"`) },\n          (`W is 32`)\n        }\n      }\n    },\n    (`V is greater than or equal to W`)\n  }\n}"
+}

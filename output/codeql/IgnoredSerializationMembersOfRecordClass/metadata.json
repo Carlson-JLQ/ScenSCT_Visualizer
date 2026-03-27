@@ -1,0 +1,5 @@
+{
+    "checker_id": "Violations of Best Practice/Records/IgnoredSerializationMembersOfRecordClass.ql",
+    "checker_desc": "This checker detects any member of a record class that has a name matching one of the special serialization-related method or field names, which are ignored by the Java serialization mechanism for records.",
+    "checker_dsl": "EXISTS (`Record record`, `Member m`) {\n  AND {\n    (`member m is a direct member of record record`),\n    (`member m has a name that is exactly one of: \"writeObject\", \"readObject\", \"readObjectNoData\", \"writeExternal\", \"readExternal\", \"serialPersistentFields\"`)\n  }\n}"
+}

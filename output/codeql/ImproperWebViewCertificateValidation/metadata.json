@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-295/ImproperWebViewCertificateValidation.ql",
+    "checker_desc": "This checker detects Android WebViewClient.onReceivedSslError method implementations that unconditionally accept all SSL certificates by calling SslErrorHandler.proceed without proper validation.",
+    "checker_dsl": "EXISTS (`method M`) {\n  AND {\n    (`method M overrides android.webkit.WebViewClient.onReceivedSslError`),\n    EXISTS (`method call MC`) {\n      AND {\n        (`method call MC invokes method android.webkit.SslErrorHandler.proceed`),\n        (`method call MC's qualifier is a variable access VA`),\n        (`variable access VA refers to the second parameter of method M`),\n        (`basic block containing method call MC post-dominates the entry basic block of method M's body`)\n      }\n    }\n  }\n}"
+}

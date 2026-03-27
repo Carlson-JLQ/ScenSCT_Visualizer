@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Concurrency/SynchOnBoxedType.ql",
+    "checker_desc": "This checker detects synchronization statements where the synchronized expression's type is a boxed primitive type or the String type.",
+    "checker_dsl": "EXISTS (`synchronized statement SYNCH`) {\n  EXISTS (`type TYPE`) {\n    AND {\n      (`the expression of SYNCH has type TYPE`),\n      OR {\n        (`TYPE is a boxed primitive type (e.g., java.lang.Integer, java.lang.Boolean)`),\n        (`TYPE is the java.lang.String type`)\n      }\n    }\n  }\n}"
+}

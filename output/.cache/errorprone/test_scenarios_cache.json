@@ -1,0 +1,387 @@
+{
+  "BoxedPrimitiveEquality": {
+    "pos": [
+      "A Java method contains a binary equality (== or !=) comparison where both operands are non-null expressions of boxed primitive types (e.g., `Integer`, `Long`, `Boolean`). Example: `Integer a = 1; Integer b = 1; boolean c = (a == b);`"
+    ],
+    "neg": [
+      "A binary expression using any operator other than `==` or `!=` (e.g., `<`, `>`, `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `&&`, `||`, `<=`, `>=`, `<<`, `>>`, `>>>`, `instanceof`).",
+      "A binary expression with operator `==` or `!=` where the left operand's type is a primitive type (e.g., `int`, `boolean`).",
+      "A binary expression with operator `==` or `!=` where the left operand is the `null` literal (e.g., `null == something`).",
+      "A binary expression with operator `==` or `!=` where the left operand's type is a reference type that is not a boxed primitive type (e.g., `String`, `Object`, any custom class).",
+      "A binary expression with operator `==` or `!=` where the left operand is a boxed primitive type (e.g., `Integer`, `Boolean`) and the right operand is the `null` literal.",
+      "A binary expression with operator `==` or `!=` where the left operand is a boxed primitive type and the right operand's type is a primitive type (e.g., `Integer == int` or `Boolean != boolean`).",
+      "A binary expression with operator `==` or `!=` where the left operand is a boxed primitive type and the right operand's type is a reference type that is not a boxed primitive type (e.g., `Integer == String`, `Boolean != Object`)."
+    ]
+  },
+  "MissingCasesInEnumSwitch": {
+    "pos": [
+      "A switch statement on an enum type with no default case, where all case expressions are references to enum constants, but at least one enum constant is not covered by any case.",
+      "A switch statement on an enum type with no default case, where all case expressions are not references to enum constants (e.g., they are integer literals, variables, or other expressions), leaving at least one enum constant unhandled.",
+      "A switch statement on an enum type with a default case preceded by a skew comment, where all case expressions are references to enum constants, but at least one enum constant is not covered by any case.",
+      "A switch statement on an enum type with a default case that is preceded by a skew comment (e.g., /*skew*/), and all case expressions are not references to enum constants, leaving at least one enum constant unhandled.",
+      "A switch expression on an enum type with no default case, where all case expressions are references to enum constants, but at least one enum constant is not covered by any case.",
+      "A switch expression on an enum type with no default case, where all case expressions are not references to enum constants, leaving at least one enum constant unhandled."
+    ],
+    "neg": [
+      "A switch statement on an enum with a default case that lacks a skew comment (i.e., a normal default case).",
+      "A switch expression on an enum type with a default case that is not preceded by a skew comment, and all case expressions are not references to enum constants, leaving at least one enum constant unhandled (but handled by the default).",
+      "A switch expression on an enum type with a default case that is not preceded by a skew comment, where all case expressions are references to enum constants, but at least one enum constant is not covered by any case (but handled by the default).",
+      "A switch statement switching on a non-enum expression (e.g., int or String).",
+      "A switch expression switching on a non-enum expression (e.g., int or String).",
+      "A switch expression on an enum that handles all enum constants, without a default case marked with a skew comment (i.e., either no default or a default without skew comment).",
+      "A switch expression on an enum with a default case that is marked with a skew comment.",
+      "A switch statement on an enum that handles all enum constants, with either no default case or a default case marked with a skew comment."
+    ]
+  },
+  "LogicalAssignment": {
+    "pos": [
+      "An `if` statement uses an assignment expression (e.g., `x = true`) as its condition.",
+      "A `while` loop uses an assignment expression (e.g., `x = true`) as its condition.",
+      "A `for` loop uses an assignment expression (e.g., `x = true`) as its condition.",
+      "A `do-while` loop uses an assignment expression (e.g., `x = true`) as its condition."
+    ],
+    "neg": [
+      "An `if` statement where the condition expression does not contain any assignment operator."
+    ]
+  },
+  "FragmentInjection": {
+    "pos": [
+      "A non-abstract class that extends `android.preference.PreferenceActivity` and does not declare any `isValidFragment` method.",
+      "A non-abstract class that extends `android.preference.PreferenceActivity` and declares a method named `isValidFragment` that does not have exactly one parameter (e.g., zero parameters or two parameters).",
+      "A non-abstract class that extends `android.preference.PreferenceActivity` and declares a method named `isValidFragment` with exactly one parameter, but the parameter type is not `String` (e.g., `Object`, `int`).",
+      "A class extending `android.preference.PreferenceActivity` that declares a method `boolean isValidFragment(String)` whose body consists only of `return true;` statements (or a single `return true;`)."
+    ],
+    "neg": [
+      "A concrete Java class that does not extend android.preference.PreferenceActivity.",
+      "Any method that is not named \"isValidFragment\" or does not have exactly one parameter of type java.lang.String.",
+      "A class that does not extend android.preference.PreferenceActivity but contains a method named isValidFragment with exactly one parameter of type java.lang.String.",
+      "An abstract class that extends android.preference.PreferenceActivity.",
+      "A concrete class that extends android.preference.PreferenceActivity and implements a method named isValidFragment with exactly one parameter of type java.lang.String (the method body does not unconditionally return true).",
+      "A concrete class that extends android.preference.PreferenceActivity and implements isValidFragment with at least one return statement that does not return the constant boolean value true (e.g., returns false or a conditional expression)."
+    ]
+  },
+  "DoubleCheckedLocking": {
+    "pos": [
+      "A class contains a non-volatile, non-primitive, non-special-immutable-type field. In a method, an outer `if` checks if this field is null. Inside the `if`'s then-block, a `synchronized` block locks on the class or an object. Inside the synchronized block, an inner `if` re-checks the same field for null, and if null, assigns a new instance to it. The field is later read outside the synchronized block after the null-check."
+    ],
+    "neg": [
+      "An outer `if` statement whose condition is not a null check (e.g., `if (true)`, `if (x > 5)`, `if (field != 5)`).",
+      "An outer `if` statement whose condition is a binary expression involving a field but not a null check (e.g., `if (field == 5)`, `if (field != otherField)`).",
+      "An outer `if` statement with a null-check condition (e.g., `if (field == null)`), but its then block does not directly contain a synchronized block.",
+      "An outer `if` statement with a null-check condition, its then block directly contains a synchronized block, but that synchronized block does not directly contain an inner `if` statement.",
+      "An outer `if` statement with a null-check condition, its then block directly contains a synchronized block, which directly contains an inner `if` statement, but the inner if's condition is not a null check (e.g., `if (true)`, `if (x > 0)`).",
+      "An outer `if` statement with a null check on a field, its then block directly contains a synchronized block, which directly contains an inner `if` with a null check on the same field, but the field is either volatile, a primitive type, a boxed primitive (e.g., `Integer`), or `String`. Alternatively, the checks are on a local variable assigned from such a field inside the synchronized block before the inner if."
+    ]
+  },
+  "RedundantNullCheck": {
+    "pos": [
+      "A Java method contains an explicit null check (using `== null` or `!= null`) on a variable that is statically known to be non-null (e.g., a `@NonNull` field or a variable initialized with a non-null constant).",
+      "A Java method contains an explicit null check (using `== null` or `!= null`) on the result of a method invocation whose return value is statically known to be non-null (e.g., a method with a `@NonNull` return type).",
+      "A Java method contains a call to `java.util.Objects.requireNonNull` with a variable argument that is statically known to be non-null (e.g., a `@NonNull` annotated parameter or a final variable initialized with a non-null constant).",
+      "A Java method contains a call to `java.util.Objects.requireNonNull` with an argument that is a method invocation whose return value is statically known to be non-null (e.g., a method annotated with `@NonNull` or returning `String` in a context where it cannot be null)."
+    ],
+    "neg": [
+      "An explicit null check (`== null` or `!= null`) on an effectively nullable variable.",
+      "An explicit null check (`== null` or `!= null`) on the result of a method invocation where the method is effectively nullable.",
+      "A null check performed via a method call (other than `java.util.Objects.requireNonNull`) on an effectively nullable variable or expression.",
+      "A call to `java.util.Objects.requireNonNull` with an effectively nullable variable as the argument.",
+      "A call to `java.util.Objects.requireNonNull` with an argument that is the result of a method invocation where the method is effectively nullable.",
+      "Any binary expression that is not a null check (i.e., not `== null` or `!= null`)."
+    ]
+  },
+  "InterruptedExceptionSwallowed": {
+    "pos": [
+      "A method throws InterruptedException directly (e.g., via `throw new InterruptedException()`) but does not declare InterruptedException (or any supertype thereof) in its throws clause, and does not throw any RuntimeException.",
+      "A method throws a custom checked exception that is a strict subtype of InterruptedException (e.g., `class CustomIE extends InterruptedException {}`), but does not declare that custom exception (or any supertype thereof, including InterruptedException) in its throws clause, and does not throw any RuntimeException.",
+      "A method does not declare `InterruptedException` or any of its subtypes in its `throws` clause, but its body contains code that throws an exception that is a subtype of `InterruptedException`, does not throw any exception that is a supertype of `InterruptedException` (except `InterruptedException` itself), does not throw any runtime exception, and declares a broader exception type (a supertype of `InterruptedException`) in its `throws` clause.",
+      "A method does not declare `InterruptedException` or any of its subtypes in its `throws` clause, but its body contains code that throws an exception that is a subtype of `InterruptedException` and also code that throws an exception that is a supertype of `InterruptedException` (but not `InterruptedException` itself).",
+      "A try block throws InterruptedException (or a subtype). It is caught by a catch clause that catches a supertype (e.g., Exception), and the catch block does not perform an instanceof check for InterruptedException nor rethrow the caught exception.",
+      "A try block throws InterruptedException (or a subtype). It is caught by a catch clause that catches a supertype (e.g., Exception). The catch block rethrows the caught exception, but the enclosing method does not declare InterruptedException (or a supertype thereof) in its throws clause, and the catch block does not contain an instanceof check for InterruptedException."
+    ],
+    "neg": [
+      "A method declares a checked exception type that is a subtype of `InterruptedException` (e.g., `InterruptedException` itself or a custom subclass) in its `throws` clause.",
+      "A method does not declare `InterruptedException` or any of its subtypes in its `throws` clause, and its body does not throw any exception that is a subtype of `InterruptedException`.",
+      "A catch clause catches one or more exception types, none of which are a supertype of `InterruptedException` (i.e., `InterruptedException` is not assignable to any of the caught types).",
+      "A catch clause catches an exception type that is a supertype of `InterruptedException` (e.g., `Exception`), does not catch `InterruptedException` or any of its subtypes, and the associated try block does not throw any exception that is a subtype of `InterruptedException`.",
+      "A catch clause catches at least one exception type that is a supertype of `InterruptedException` and at least one exception type that is a subtype of `InterruptedException` (e.g., catches `Exception` and `InterruptedException` in a multi-catch).",
+      "A catch clause catches an exception type that is a supertype of `InterruptedException` (e.g., `Exception`), does not catch `InterruptedException` or any of its subtypes, the associated try block throws an exception that is a subtype of `InterruptedException`, and the catch block contains an `instanceof` check for `InterruptedException` (presumably to handle it specially).",
+      "A catch clause catches an exception type that is a supertype of `InterruptedException` (e.g., `Exception`), does not catch `InterruptedException` or any of its subtypes, the associated try block throws an exception that is a subtype of `InterruptedException`, the catch block does not contain an `instanceof` check for `InterruptedException`, the caught exception is rethrown within the catch block, and the enclosing method declares `InterruptedException` in its `throws` clause."
+    ]
+  },
+  "DereferenceWithNullBranch": {
+    "pos": [
+      "A field or method access where the receiver is the target of an assignment, and the assigned value (RHS) has a definitely null branch, making the receiver null.",
+      "A field or method access where the receiver is a parenthesized expression, and the expression inside the parentheses has a definitely null branch, making the receiver null.",
+      "A field or method access where the receiver is a type cast expression, and the expression being cast has a definitely null branch, making the receiver null.",
+      "A field or method access where the receiver is a variable that has a definitely null branch (e.g., due to assignment or conditional logic).",
+      "A field or method access where the receiver is a ternary conditional expression, and one of its branches (true or false) has a definitely null branch, making the receiver null in that branch.",
+      "A field or method access where the receiver is within a switch expression, and a case body of that switch contains a definitely null branch, causing the receiver to be null in that case.",
+      "A field or method access where the receiver is a method call that can return null (e.g., `Optional.orNull()`, `Optional.orElse(null)`, `Strings.emptyToNull()`, or a method with a definitely null branch)."
+    ],
+    "neg": [
+      "A member select expression that is a class literal (e.g., `MyClass.class`), not a field or method access.",
+      "A field or method access where the receiver expression is not void, not a definitely null variable, and does not contain any definitely null branch from assignments, ternary conditionals, identifiers with null branches, method invocations like Optional.orNull(), parenthesized expressions, type casts, or switch expressions."
+    ]
+  },
+  "EqualsIncompatibleType": {
+    "pos": [
+      "A Java class containing a call to `a.equals(b)` where the compile-time type of `a` and the compile-time type of `b` are provably incompatible (e.g., `String` and `Integer`).",
+      "A Java class containing a call to `Objects.equals(a, b)` where the compile-time type of `a` and the compile-time type of `b` are provably incompatible (e.g., `List<String>` and `Set<Integer>`).",
+      "A Java class where `Predicate.isEqual(someValue)` is used in a context with a target type `Predicate<T>`, and the type `T` is incompatible with the compile-time type of `someValue` (e.g., `Predicate<String> p = Predicate.isEqual(123);`).",
+      "A Java class containing a method reference `Objects::equals` assigned to a functional interface type whose two parameter types are incompatible (e.g., `BiPredicate<String, Integer> p = Objects::equals;`).",
+      "A Java class containing a method reference `someObject::equals` assigned to a functional interface type whose first parameter type is incompatible with the type of `someObject` (e.g., `String s = \"text\"; Predicate<Integer> p = s::equals;`).",
+      "A Java class containing a method reference `Predicate::isEqual` assigned to a functional interface type whose return type is `Predicate<T>` and whose first parameter type is incompatible with `T` (e.g., `Function<String, Predicate<Integer>> f = Predicate::isEqual;`)."
+    ],
+    "neg": [
+      "A member reference that is not a reference to `Objects.equals`, an instance `equals` method, or `Predicate.isEqual`."
+    ]
+  },
+  "NarrowingCompoundAssignment": {
+    "pos": [
+      "A compound assignment (e.g., +=, -=, *=, /=, %=, <<=, >>>=) where the left-hand side variable is of a primitive type (e.g., `byte`, `short`, `char`, `int`, `long`, `float`, `double`) and the right-hand side expression is of a type not convertible to the LHS type (e.g., assigning a `double` to an `int` via `+=`).",
+      "A compound assignment with a bitwise operator (&=, ^=, |=) where the left-hand side variable is of a primitive type (e.g., `byte`, `short`) and the right-hand side expression is of a type not convertible to the LHS type, and the RHS is either not a compile-time constant integer/long, or is a constant integer/long whose value, when shifted right by the bit-width of the LHS type, is not all zeros or all ones (i.e., does not fit within the sign-extended bits)."
+    ],
+    "neg": [
+      "Compound assignment where the left-hand side variable's type is not a primitive type (e.g., a reference type).",
+      "Compound assignment where the left-hand side variable's type is a primitive type and the right-hand side expression's type is convertible to that primitive type (e.g., same type or widening conversion).",
+      "Compound assignment where the left-hand side variable's type is a primitive type, the right-hand side expression's type is not convertible to that type, but the operator is right shift assignment (`>>=`).",
+      "Compound assignment where the left-hand side variable's type is a primitive type (`byte` or `short`), the right-hand side expression's type is not convertible to that type, the operator is bitwise AND, XOR, or OR assignment (`&=`, `^=`, `|=`), and the right-hand side is a constant integer or long whose higher bits (above the width of the LHS type) are all 0 or all 1."
+    ]
+  },
+  "MissingBraces": {
+    "pos": [
+      "An `if` statement with a single-statement `then` clause (not a block) and no `else` clause.",
+      "A `while` loop with a single-statement body (not a block).",
+      "A basic `for` loop with a single-statement body (not a block).",
+      "An enhanced `for` loop (for-each) with a single-statement body (not a block).",
+      "A `do-while` loop with a single-statement body (not a block).",
+      "An `if` statement with a single-statement `then` clause (not a block) and a single-statement `else` clause (not a block and not an `else if`).",
+      "An `if` statement with a single-statement then (no braces) and a block else-statement (i.e., `else` followed by braces).",
+      "An `if` statement with a single-statement then (no braces) and an `else if` clause (where the else-statement is another `if`)."
+    ],
+    "neg": [
+      "An `if` statement whose then-statement is a block (i.e., enclosed in braces).",
+      "A `while` loop whose body is a block (i.e., enclosed in braces).",
+      "A `do-while` loop whose body is a block (i.e., enclosed in braces).",
+      "A regular `for` loop whose body is a block (i.e., enclosed in braces).",
+      "An enhanced `for` loop (for-each) whose body is a block (i.e., enclosed in braces).",
+      "An `if` statement with a block then-statement exists, and a separate statement (e.g., an expression statement) is present elsewhere in the same scope, which is not the then-statement of that `if`.",
+      "A `while` loop with a block body exists, and a separate statement (e.g., an expression statement) is present elsewhere in the same scope, which is not the body of that `while` loop.",
+      "A `do-while` loop with a block body exists, and a separate statement (e.g., an expression statement) is present elsewhere in the same scope, which is not the body of that `do-while`.",
+      "A `for` loop (regular) with a block body exists, and a separate statement (e.g., an expression statement) is present elsewhere in the same scope, which is not the body of that `for` loop.",
+      "An enhanced `for` loop (for-each) with a block body exists, and a separate statement (e.g., an expression statement) is present elsewhere in the same scope, which is not the body of that enhanced `for` loop."
+    ]
+  },
+  "EqualsHashCode": {
+    "pos": [
+      "A non-Object class defines an `equals(Object)` method with a non-trivial body (more than just a single return statement) and does not define any `hashCode` method.",
+      "A non-Object class defines a non-trivial `equals(Object)` method and defines at least one `hashCode` method, but all `hashCode` methods have one or more parameters (so no valid zero-parameter override exists).",
+      "A non-Object class defines a non-trivial `equals(Object)` method and defines a zero-parameter `hashCode` method that has type parameters (e.g., `<T> int hashCode()`)."
+    ],
+    "neg": [
+      "A Java source file containing no class declaration (e.g., an interface, enum, annotation, or a file with only primitive/method/field definitions).",
+      "A Java class (not java.lang.Object) that does not declare any equals method (i.e., relies on the inherited Object.equals).",
+      "A Java class (not java.lang.Object) that declares an equals method with exactly one statement: return super.equals(obj); (i.e., a trivial delegation to Object.equals).",
+      "A non-Object class defines a trivial `equals(Object)` method (single return statement without `Object.equals` call) and does not override `hashCode` (only inherits from `Object`).",
+      "A non-Object class defines a trivial `equals(Object)` method (single return statement without `Object.equals` call) and defines at least one `hashCode` method, all of which have parameters.",
+      "A non-Object class defines a trivial `equals(Object)` method (single return statement without `Object.equals` call) and defines a zero-parameter `hashCode` method with type parameters.",
+      "A Java class (not java.lang.Object) that declares a non-trivial equals method (i.e., not just super.equals) and also declares a hashCode method (or inherits one from a non-Object superclass)."
+    ]
+  },
+  "MissingDefault": {
+    "pos": [
+      "A switch statement on a non-enum type (e.g., int) that is not exhaustive (e.g., not covering all possible values) and has no default case.",
+      "A switch statement on a non-enum type with a default case that is last, has an empty body (no statements), and has no tokens (including comments) after the default case before the end of the switch.",
+      "A switch statement on a non-enum type with a default case that is last, has an empty body, and any tokens between the end of the default case and the end of the switch are not comments (i.e., no comment is present)."
+    ],
+    "neg": [
+      "A default case in a switch statement where the expression type is not an enum, and the default case contains at least one statement (non-empty).",
+      "A switch statement where the expression type is not an enum and a default case is present (and the default case is not empty or has a comment).",
+      "A default case in a switch statement where the expression type is an enum, and the default case is not empty or has a comment.",
+      "A switch statement where the expression type is an enum.",
+      "A switch statement where the expression type is not an enum, no default case is present, and the switch is exhaustive (e.g., on a sealed class or boolean).",
+      "A default case in a switch statement where the expression type is not an enum, the default case is empty (no statements), it is the last case in the switch, and there is a comment between the end of the default case and the end of the switch."
+    ]
+  },
+  "FallThrough": {
+    "pos": [
+      "A switch case that can complete normally (e.g., ends without a `break`, `return`, `throw`, or infinite loop) and is immediately followed by another case, with no \"fall through\" comment (or equivalent) between them.",
+      "A switch case that cannot complete normally (e.g., ends with a `break`, `return`, or `throw`) and is immediately followed by another case, but a \"fall through\" comment (or equivalent) exists between them."
+    ],
+    "neg": [
+      "A switch statement with consecutive cases where the first case ends with a statement that cannot complete normally (e.g., `break`, `return`, `continue`, `throw`), and there is no \"fall through\" comment (or similar phrasing) in the source code between the end of that case and the start of the next case.",
+      "A switch statement with consecutive cases where the first case ends with a statement that can complete normally (allowing execution to fall through), and there is a \"fall through\" comment (or similar phrasing) present in the source code between the end of that case and the start of the next case.",
+      "A switch statement where, for a given pair of case labels, at least one of the following is true: the first case is not a direct child of the switch, the second case is not a direct child, they are not immediately consecutive in the switch's case list, the first case has a null statement list, or the first case's statement list is empty."
+    ]
+  },
+  "IntLongMath": {
+    "pos": [
+      "A long variable is declared and initialized with an int-typed non-constant binary expression (using an operator like +, -, *, <<, >>>) where the int sub-expression may overflow.",
+      "A long-typed variable or field is assigned an int-typed non-constant binary expression (using an operator like +, -, *, <<, >>>) where the int sub-expression may overflow.",
+      "Inside a lambda expression with long return type (e.g., LongSupplier), a return statement returns an int-typed non-constant binary expression (using an operator like +, -, *, <<, >>>) where the int sub-expression may overflow."
+    ],
+    "neg": [
+      "Assignment of a compile-time constant int expression to a long variable.",
+      "A variable declaration without an initializer expression.",
+      "Declaration of a non-long variable (e.g., int, double) with an initializer expression.",
+      "Assignment to a non-long variable (e.g., int, double) with a right-hand side expression.",
+      "Declaration of a long variable initialized with a non-constant int expression whose innermost binary tree (if any) uses only safe operators (/, %, &, ^, |, >>).",
+      "Assignment of a non-constant int expression (that is not a problematic binary arithmetic tree) to a long variable.",
+      "Return of a non-int expression from a long-returning method enclosed in a long-returning lambda.",
+      "Return of a non-constant int expression (that is not a problematic binary arithmetic tree) from a long-returning method enclosed in a long-returning lambda.",
+      "Return statement inside a long-returning method but enclosed in a lambda that does not return long (or not in a lambda).",
+      "Return statement inside a long-returning method with no enclosing lambda expression."
+    ]
+  },
+  "ReturnValueIgnored": {
+    "pos": [
+      "An instance method call on a `java.lang.Object` descendant with method name `getClass`, `hashCode`, `clone`, `toString`, or `equals` where its return value is ignored.",
+      "A method call on `java.lang.Boolean`, `Byte`, `Character`, `Double`, `Float`, `Integer`, `Long`, or `Short` (excluding specific methods like `Character.toChars`, `decode`, `parse*`, certain `valueOf` overloads) where its return value is ignored.",
+      "A method call on `java.lang.Class` (excluding `forName` and `getMethod`) where its return value is ignored.",
+      "A static method call on `java.util.Arrays` (e.g., `Arrays.copyOf`) or `java.util.Map.Entry` where its return value is ignored (e.g., used as a statement).",
+      "An instance method call `hasNext()` on a `java.util.Iterator` descendant where its boolean return value is ignored.",
+      "An instance method call `iterator()` or `spliterator()` on a `java.lang.Iterable` descendant where its return value is ignored.",
+      "A public method call on a class in the `java.util.function` package (e.g., `Function.apply`) where its return value is ignored.",
+      "A public method call in `java.time` or `org.threeten.bp` packages (excluding specific methods like `parse`, `of`, `from`, etc.) where its return value is ignored.",
+      "An instance method call on a `java.util.stream.BaseStream` descendant (e.g., `Stream.map`) where its return value is ignored (not used in a chain or assignment).",
+      "A static method call named `newBuilder` on a class extending `com.google.protobuf.MessageLite` where its return value (a builder) is ignored."
+    ],
+    "neg": [
+      "An expression that is not a method invocation, constructor call, or member reference (e.g., a simple variable assignment, arithmetic expression, or literal).",
+      "A method invocation where the return value is used (e.g., assigned to a variable, used in an expression, or returned).",
+      "A static method call on java.util.Arrays where the return value is ignored (e.g., Arrays.asList(...); as a statement).",
+      "A method call on java.util.Optional where the return value is ignored (e.g., Optional.of(\"x\").filter(...); as a statement).",
+      "A method call on java.lang.CharSequence where the return value is ignored (e.g., a CharSequence object's subSequence(...); as a statement).",
+      "A method call on java.util.stream.Collector or java.util.stream.Collectors where the return value is ignored (e.g., Collectors.toList(); as a statement).",
+      "A static method call on java.util.Map.Entry where the return value is ignored (e.g., Map.entry(...); as a statement).",
+      "A method call on java.lang.Enum where the return value is ignored (e.g., an enum constant's name(); as a statement).",
+      "An instance method call on java.lang.Object where the return value is ignored, and the method is one of the allowed methods: getClass, hashCode, clone, toString, equals.",
+      "An instance method call on a java.util.Collection where the return value is ignored (any method)."
+    ]
+  },
+  "SynchronizeOnNonFinalField": {
+    "pos": [
+      "A class contains a non-final, non-static instance field (not annotated with @LazyInit, and not of type from java.io.Writer/Reader). A synchronized block within an instance method uses this field as the lock object."
+    ],
+    "neg": [
+      "Synchronize on an expression that is not a variable (e.g., `this`, a method call returning an object, or a new object instance).",
+      "Synchronize on a variable that is a local variable (including a method parameter).",
+      "Synchronize on a static field (non-final, non-local).",
+      "Synchronize on a final instance field (non-local, non-static).",
+      "Synchronize on an instance field (non-local, non-static, non-final) annotated with `@LazyInit`.",
+      "Synchronize on an instance field (non-local, non-static, non-final, not `@LazyInit`) whose declared type is `java.io.Writer` or a subclass.",
+      "Synchronize on an instance field (non-local, non-static, non-final, not `@LazyInit`, not a `Writer`) whose declared type is `java.io.Reader` or a subclass."
+    ]
+  },
+  "ToStringReturnsNull": {
+    "pos": [
+      "A non-static `toString()` method returns a conditional expression (`? :`) where the true branch or the false branch contains a `null` literal as a descendant (e.g., directly as `null`, or within parentheses or nested expressions)."
+    ],
+    "neg": [
+      "A Java class with no `toString` method defined (or with a `toString` method that is static, has parameters, or returns a non-String type).",
+      "A non-static instance `toString` method returning a `String` type, where all return statements return a non-null expression, and no `null` literal appears anywhere in the return expression (including inside parentheses or conditional branches).",
+      "A non-static instance `toString` method returning a `String` type, where all return statements return a `null` value via a non-literal expression (e.g., a variable or method call that evaluates to null), not a `null` literal, parenthesized null, or null within a conditional."
+    ]
+  },
+  "ReferenceEquality": {
+    "pos": [
+      "A reference equality comparison (`==` or `!=`) between two non-null expressions of the same reference type, where the type (or a non-Object superclass) overrides `Object.equals`, and the comparison is not inside a Comparator lambda, nor inside an overriding `compare`, `compareTo`, or `equals` method of that type, and the type is not Enum or Class."
+    ],
+    "neg": [
+      "A binary expression using any operator other than `==` or `!=` (e.g., `<`, `>`, `<=`, `>=`, `+`, `-`, `*`, `/`, `%`, `&`, `|`, `^`, `&&`, `||`).",
+      "A binary expression using `==` or `!=` where the left operand's type is primitive (e.g., `int`, `boolean`).",
+      "A binary expression using `==` or `!=` where the left operand is the `null` literal.",
+      "A binary expression using `==` or `!=` where the left operand is a reference type that does not have a relevant `equals` override (e.g., a class that does not override `equals`, or is an Enum, Class, or within a Comparator's compare method).",
+      "A binary expression using `==` or `!=` where the left operand is a reference type without a relevant `equals` override and the right operand is the `null` literal.",
+      "A binary expression using `==` or `!=` where the left operand is a reference type without a relevant `equals` override and the right operand's type is primitive.",
+      "A binary expression using `==` or `!=` where both left and right operands are reference types that do not have relevant `equals` overrides."
+    ]
+  },
+  "OperatorPrecedence": {
+    "pos": [
+      "A binary expression using +, -, *, or / is the left operand of a shift operator (<<, >>, >>>) without parentheses, creating a precedence mismatch.",
+      "A binary expression using a bitwise or logical operator (&, |, ^, &&, ||) is nested inside another such operator with different precedence, without parentheses.",
+      "A shift expression (<<, >>, >>>) is an operand of an additive or multiplicative operator (+, -, *, /) with explicit parentheses overriding natural precedence, creating a precedence mismatch.",
+      "A conditional expression (?:) with boolean unboxed type has a condition that is a binary expression using &, |, ^, &&, or ||, without parentheses around the condition."
+    ],
+    "neg": [
+      "A binary expression that is the top-level expression (not a sub-expression within another expression).",
+      "A binary expression whose immediate parent node in the AST is not a binary expression (e.g., parent is a statement, assignment, or return).",
+      "A binary expression nested directly inside another binary expression where both operators have the same precedence (e.g., `a + (b + c)`).",
+      "A binary expression nested directly inside another binary expression where the operators have different precedence, and neither operator is a logical/bitwise AND/OR/XOR (including conditional) and neither operator is a shift operator.",
+      "A logical/bitwise AND/OR/XOR expression nested directly inside a shift expression (e.g., `(a & b) << c`).",
+      "A conditional expression where the condition is not a binary expression (e.g., a simple variable, literal, or method call).",
+      "A conditional expression where the condition is a binary expression but the operator is not a logical/bitwise AND/OR/XOR (e.g., relational or arithmetic operator).",
+      "A conditional expression where the condition is a binary expression with a logical/bitwise AND/OR/XOR operator, but the conditional expression's result type is not boolean (e.g., `(a && b) ? 1 : 2`)."
+    ]
+  },
+  "LockOnBoxedPrimitive": {
+    "pos": [
+      "A synchronized block whose lock expression is of a boxed primitive type (e.g., `Integer`, `Boolean`).",
+      "A call to the `notify()` instance method where the receiver expression is of a boxed primitive type.",
+      "A call to the `notifyAll()` instance method where the receiver expression is of a boxed primitive type.",
+      "A call to the `wait()` instance method (no arguments) where the receiver expression is of a boxed primitive type.",
+      "A call to the `wait(long)` instance method where the receiver expression is of a boxed primitive type.",
+      "A call to the `wait(long, int)` instance method where the receiver expression is of a boxed primitive type."
+    ],
+    "neg": [
+      "A synchronized block where the lock expression is a non-boxed primitive object (e.g., an Object), and there exists at least one other expression in the code that is not the lock expression of that synchronized block.",
+      "A method invocation that is not an instance method call named \"wait\", \"notify\", or \"notifyAll\" with the specified signatures (no parameters, one Long, or two Long and Integer).",
+      "A synchronized block where the lock expression has a type that is not a boxed primitive (e.g., Object, String, or any other reference type excluding Boolean, Byte, Character, Short, Integer, Long, Float, Double).",
+      "A wait, notify, or notifyAll instance method call (with correct signatures) where the receiver expression has a type that is not a boxed primitive (e.g., Object, String, or any other reference type excluding Boolean, Byte, Character, Short, Integer, Long, Float, Double)."
+    ]
+  },
+  "UnusedLabel": {
+    "pos": [
+      "A labeled statement (e.g., a labeled loop or block) whose label is never referenced by any `break` or `continue` statement within the same compilation unit."
+    ],
+    "neg": [
+      "A labeled statement whose label is referenced by a break statement within the same compilation unit.",
+      "A labeled statement whose label is referenced by both a break statement and a continue statement within the same compilation unit."
+    ]
+  },
+  "UnsynchronizedOverridesSynchronized": {
+    "pos": [
+      "A non-synchronized method overrides a synchronized method from a superclass (not in java.io.InputStream), and its body is not empty and does not consist solely of a super call to the overridden method or a constant return.",
+      "An unsynchronized method that overrides a synchronized method (not from java.io.InputStream) and has an empty method body (block with zero statements)."
+    ],
+    "neg": [
+      "A method declared with the 'synchronized' modifier.",
+      "An unsynchronized method that overrides a superclass method which is also not declared with the 'synchronized' modifier.",
+      "An unsynchronized method that overrides a synchronized method declared in the class 'java.io.InputStream'.",
+      "An unsynchronized method that overrides a synchronized method (not from java.io.InputStream) and its body consists of exactly one statement which is either a return (with or without a constant expression), a super call to the overridden method, or a type cast of a constant expression."
+    ]
+  },
+  "SystemExitOutsideMain": {
+    "pos": [
+      "A class containing a static call to System.exit() directly in the class body (e.g., in an instance initializer block or static initializer block), where the class has no methods (only fields, constructors, etc.).",
+      "A class with a public instance method (non-static) and a static call to System.exit() directly in the class body (e.g., in a static initializer block).",
+      "A class with a non-public method (e.g., private or package-private) and a static call to System.exit() directly in the class body (e.g., in a static initializer block).",
+      "A class with only non-public methods (e.g., all private), and one of those non-public methods calls System.exit().",
+      "A class with a public static void main method with zero or more than one parameters, and a separate public static non-void method (e.g., public static int foo()) that calls System.exit().",
+      "A class with a public static void main method with a single parameter of a type other than String[] (e.g., Object[]), and a static call to System.exit() directly in the class body (e.g., in a static initializer block).",
+      "A class with a public static void main method with zero or more than one parameters, and a separate public static void method (not named \"main\") that calls System.exit().",
+      "A class with a non-public method and a public static void main method with a single parameter of a type other than String[] (e.g., int[]) that calls System.exit().",
+      "A class with a public instance method (non-static) and a public static void main method with zero or more than one parameters that calls System.exit().",
+      "A class with two overloaded public static void main methods: one with a single parameter of a type other than String[] (e.g., int[]) that calls System.exit(), and another with zero or more than one parameters."
+    ],
+    "neg": [
+      "A Java class where System.exit() is called directly inside a public static void main(String[]) method.",
+      "A Java class containing a non-static method call (e.g., instance method invocation).",
+      "A Java class containing a static method call to a class other than java.lang.System (e.g., Math.abs()).",
+      "A Java class containing a static method call to java.lang.System with a method name other than \"exit\" (e.g., System.gc()).",
+      "A Java class containing a public static void main(String[]) method, and a System.exit() call located elsewhere in the class (not inside that main method)."
+    ]
+  },
+  "ShortCircuitBoolean": {
+    "pos": [
+      "A top-level expression (e.g., in an expression statement or return statement) uses a primitive boolean non-short-circuiting operator (`&` or `|`).",
+      "A primitive boolean non-short-circuiting operator (`&` or `|`) is used where its immediate parent in the expression tree is not a non-short-circuiting boolean operator (e.g., inside an if condition, assignment, or method argument)."
+    ],
+    "neg": [
+      "A binary expression using any operator other than `&` or `|` (e.g., arithmetic, relational, or bitwise XOR).",
+      "A binary expression using `&` or `|` where the expression type is not `boolean` (e.g., integral bitwise operation).",
+      "A primitive boolean `&` or `|` expression nested directly as an operand of another `&` or `|` expression."
+    ]
+  }
+}

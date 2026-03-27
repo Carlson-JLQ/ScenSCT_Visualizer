@@ -1,0 +1,301 @@
+{
+  "category/java/bestpractices.xml/NonExhaustiveSwitch": {
+    "pos": [
+      "A switch statement with multiple case labels (non-pattern), no default case, and not an exhaustive enum switch."
+    ],
+    "neg": [
+      "A switch statement with exactly one case label (and no default).",
+      "A switch statement with multiple case labels and includes a default case.",
+      "A switch statement on an enum type with multiple case labels covering all enum constants explicitly, and no default case.",
+      "A switch statement with multiple case labels, no default case, not an exhaustive enum switch, and at least one pattern label (e.g., type pattern)."
+    ]
+  },
+  "category/java/errorprone.xml/DoNotTerminateVM": {
+    "pos": [
+      "A call to System.exit(int), Runtime.exit(int), or Runtime.halt(int) is made within a method that is not a main method (i.e., not public static void main(String[] args)).",
+      "A call to System.exit(int), Runtime.exit(int), or Runtime.halt(int) is made within an instance initializer block or a static initializer block."
+    ],
+    "neg": [
+      "A method call to System.exit, Runtime.exit, or Runtime.halt that is not contained within any non-main method or initializer, e.g., inside a main method or a constructor.",
+      "A method call to a method other than System.exit, Runtime.exit, or Runtime.halt (e.g., System.gc()) contained within a non-main method or an initializer."
+    ]
+  },
+  "category/java/errorprone.xml/OverrideBothEqualsAndHashcode": {
+    "pos": [
+      "A non-Comparable class (non-interface) contains a valid equals method (non-bridge, Object param) and at least one method that is either a valid equals or hashCode.",
+      "A non-Comparable class (non-interface) contains a valid equals method (non-bridge, Object param) and a method named \"hashCode\" with zero parameters but a return type other than int."
+    ],
+    "neg": [
+      "A non-Comparable class (non-interface) contains a method named \"equals\" with exactly one parameter whose type is not Object (or a supertype like Object).",
+      "A non-Comparable class (non-interface) contains a bridge method named \"equals\" with a single parameter of type Object (or supertype). The class may or may not contain other proper equals/hashCode methods.",
+      "A non-Comparable class (non-interface) contains a valid equals method (non-bridge, Object param) and a bridge method named \"hashCode\" with zero parameters and return type int.",
+      "A non-Comparable class (non-interface) contains no method that is a valid equals (non-bridge, single Object parameter) and no method that is a valid hashCode (non-bridge, zero parameters, returns int).",
+      "A non-Comparable class (non-interface) contains a valid equals method (non-bridge, Object param) and a distinct valid hashCode method (non-bridge, zero parameters, returns int).",
+      "A type declaration that is not a class, record, or anonymous class (e.g., an interface, enum, or annotation).",
+      "A class (non-interface) that implements Comparable (is a subtype of java.lang.Comparable)."
+    ]
+  },
+  "category/java/bestpractices.xml/UnusedAssignment": {
+    "pos": [
+      "A local variable is assigned a value (non-unary, non-field assignment). That value is never read before the variable is reassigned or goes out of scope. The assignment is not an initializer or blank declaration, and the rule is configured to report such unused assignments (REPORT_UNUSED_VARS is true or irrelevant).",
+      "A local variable is updated via a postfix increment or decrement operator (e.g., `x++`, `y--`). The result of this operation (the value before increment/decrement) is never read before the variable is reassigned or goes out of scope. The variable name is not special. The rule is configured to report such unused assignments.",
+      "A local variable is used in a pure prefix unary operation (e.g., `+x`, `-x`, `~x`). The result of this operation is never read before the variable is reassigned or goes out of scope. The variable name is not special. The rule is configured to report such unused assignments.",
+      "A local variable is updated via a compound assignment operator (e.g., `+=`). The result is never read. The variable is later reassigned (killer assignment exists). The variable name is not special. The assignment is not a foreach loop variable.",
+      "A local variable is updated via a postfix increment/decrement (e.g., `x++`). The result of this operation is never read. The variable is later reassigned (killer assignment exists). The rule is configured to report such unused assignments, and the assignment is not a foreach loop variable.",
+      "A local variable is updated via a prefix increment or decrement operator (e.g., `++x`, `--y`). The result of this operation (the value after increment/decrement) is never read before the variable is reassigned or goes out of scope. The rule property CHECK_PREFIX_INCREMENT is true. The variable name is not special.",
+      "A local variable is updated via a prefix increment/decrement (e.g., `++x`). The result is never read. The variable is later reassigned (killer assignment exists). The rule property CHECK_PREFIX_INCREMENT is true. The assignment is not a foreach loop variable.",
+      "A local variable is updated via a prefix increment/decrement operator (e.g., `++x`) as a standalone statement. The result is never read. The rule property CHECK_PREFIX_INCREMENT is false (so checking is enabled for standalone statements). The variable name is not special.",
+      "A local variable is updated via a prefix increment/decrement (e.g., `++x`) as a standalone statement. The result is never read. The variable is later reassigned (killer assignment exists). The rule property CHECK_PREFIX_INCREMENT is false. The assignment is not a foreach loop variable.",
+      "An unused assignment with exactly one killer assignment, where the killer's location is neither the same as the assignment (with special suppression) nor different (which would also suppress). This means the killer does not suppress the violation, so the assignment is a true unused violation."
+    ],
+    "neg": [
+      "An assignment to a variable where the assigned value is read (used) before the variable is reassigned or goes out of scope.",
+      "A prefix increment/decrement assignment (e.g., ++x) used within an expression (not as a standalone statement) when the rule property CHECK_PREFIX_INCREMENT is false.",
+      "An unused assignment to a variable named exactly \"_\" (single underscore), where either the assignment has no killer and is not a field and not a suppressed initializer/declaration, or has a suppressing killer, or has multiple killers.",
+      "An unused assignment to a variable whose name starts with \"ignored\" or \"unused\", where either the assignment has no killer and is not a field and not a suppressed initializer/declaration, or has a suppressing killer, or has multiple killers."
+    ]
+  },
+  "category/java/codestyle.xml/ControlStatementBraces": {
+    "pos": [
+      "A basic `for` loop with a single-statement body (e.g., a method call, assignment, or increment) that is not enclosed in braces.",
+      "An enhanced `for` (foreach) loop with a single-statement body (e.g., a method call or assignment) that is not enclosed in braces.",
+      "A `do-while` loop with a single-statement body (e.g., a method call, assignment, or increment) that is not enclosed in braces.",
+      "An `if` statement where either the `then` or `else` branch is a single statement (not a block and not another `if` statement) when the checker's `checkSingleIfStmt` property is set to true.",
+      "An `if` statement with an `else` clause where either the `then` or `else` branch is a single statement (not a block and not another `if` statement).",
+      "A `while` loop with an empty statement body (a single semicolon) when the checker's `allowEmptyLoop` property is set to false.",
+      "An enhanced `for` (foreach) loop with an empty statement body (a single semicolon) when the checker's `allowEmptyLoop` property is set to false.",
+      "A `do-while` loop with an empty statement body (a single semicolon) when the checker's `allowEmptyLoop` property is set to false.",
+      "A switch case label that falls through to the next case (i.e., not ending with `break`, `return`, etc.) and contains more than two statements (none of which are a block) when the checker's `checkCaseStmt` property is set to true.",
+      "A switch case label that falls through to the next case and contains at least two statements, where the second statement is not a block, when the checker's `checkCaseStmt` property is set to true."
+    ],
+    "neg": [
+      "A foreach loop whose body is a block (enclosed in braces).",
+      "A do-while loop whose body is a block (enclosed in braces).",
+      "A for loop whose body is a block (enclosed in braces).",
+      "A while loop whose body is an empty statement (a single semicolon) and the checker property `allowEmptyLoop` is set to true.",
+      "A foreach loop whose body is an empty statement (a single semicolon) and the checker property `allowEmptyLoop` is set to true.",
+      "Any switch case (or default) label when the checker property `checkCaseStmt` is set to false.",
+      "An if statement without an else clause, where its then-statement is not a block and is not another if statement, the property `checkSingleIfStmt` is false, and the if statement is not a nested else-if within two parent if statements.",
+      "An if statement where its then-statement is another if statement (an else-if pattern) and is not a block.",
+      "A switch case (or default) label that has exactly two child nodes (e.g., a block statement as the second child) and the checker property `checkCaseStmt` is set to true.",
+      "The condition expression of an if statement (the first child)."
+    ]
+  },
+  "category/java/errorprone.xml/EmptyFinalizer": {
+    "pos": [
+      "A non-final class containing a non-final `finalize()` method with an empty body.",
+      "A final class containing a non-final `finalize()` method with an empty body."
+    ],
+    "neg": [
+      "A block exists that is not a direct child of any method declaration (e.g., a block in a static initializer, instance initializer, or lambda body).",
+      "A block inside a method declaration, where the containing class has no method named \"finalize\" with zero parameters that is non-final.",
+      "A non-empty block inside a non-final finalize method (with zero parameters) in a non-final class, or inside a finalize method in a final class."
+    ]
+  },
+  "category/java/multithreading.xml/DoubleCheckedLocking": {
+    "pos": [
+      "A method returns a non-volatile, non-primitive field. The method implements double-checked locking: an outer null check, a synchronized block, an inner null check, and assignment to the field inside the inner check. The field is returned. This pattern may expose a partially constructed object due to lack of volatile."
+    ],
+    "neg": [
+      "A method with a `void` return type.",
+      "A method with a primitive return type (e.g., `int`).",
+      "An abstract method (or interface method) with a non-primitive, non-void return type.",
+      "A method with a non-primitive, non-void return type and a method body that contains no return statement.",
+      "A method with a non-primitive, non-void return type and a method body that contains multiple return statements.",
+      "A method with a non-primitive, non-void return type, a method body, exactly one return statement, and the returned expression is not a simple variable name (e.g., returns `new Object()` or `\"string\"`).",
+      "A method with a non-primitive, non-void return type, a method body, exactly one return statement returning a variable, and that variable is either a volatile field, or a local variable that is initialized from a volatile field or assigned from a volatile field.",
+      "A method with a non-primitive, non-void return type, a method body, exactly one return statement returning a non-volatile variable, and the method does not contain the double-checked locking pattern (no outer null-check `if` with synchronized block and inner null-check `if` assigning to the variable)."
+    ]
+  },
+  "category/java/errorprone.xml/FinalizeShouldBeProtected": {
+    "pos": [
+      "A Java class contains a `finalize` method with zero parameters declared with a visibility other than `protected` (e.g., `public`, package-private/default, or `private`)."
+    ],
+    "neg": [
+      "A Java class containing only non-protected methods, none of which are named \"finalize\".",
+      "A Java class containing only protected methods, including a protected finalize() method with zero parameters.",
+      "A Java class containing a non-protected finalize method with one or more parameters."
+    ]
+  },
+  "category/java/multithreading.xml/UseNotifyAllInsteadOfNotify": {
+    "pos": [
+      "A Java source file containing a call to the `notify()` method with no arguments, such as `obj.notify();` where `obj` is an instance of a class (e.g., `Object` or a subclass)."
+    ],
+    "neg": [
+      "A method call where the method name is not \"notify\".",
+      "A method call to `notify` with one or more arguments."
+    ]
+  },
+  "category/java/errorprone.xml/ReturnFromFinallyBlock": {
+    "pos": [
+      "A method contains a try-finally statement. Inside the finally block, there is a return statement. The finally block does not contain any method declarations or lambda expressions."
+    ],
+    "neg": [
+      "A return statement located outside of any finally block.",
+      "A return statement inside a method (or constructor) that is itself declared within a finally block.",
+      "A return statement inside a lambda expression that is itself declared within a finally block."
+    ]
+  },
+  "category/java/bestpractices.xml/UnusedFormalParameter": {
+    "pos": [
+      "A private constructor has a formal parameter that is never referenced within the constructor body. The parameter name does not start with \"ignored\" or \"unused\" and is not \"_\".",
+      "A private method (with a body, non-default, not overridden) has a formal parameter that is never used. The parameter name does not start with \"ignored\" or \"unused\" and is not \"_\". The method is not the specific private readObject method that throws InvalidObjectException with a single ObjectInputStream parameter.",
+      "When the checker is configured to check all constructors (checkAll=true), a constructor (any visibility) has a formal parameter that is never used. The parameter name does not start with \"ignored\" or \"unused\" and is not \"_\".",
+      "When the checker is configured to check all methods (checkAll=true), a method (any visibility, with a body, non-default, not overridden) has a formal parameter that is never used. The parameter name does not start with \"ignored\" or \"unused\" and is not \"_\". The method is not the specific private readObject method that throws InvalidObjectException with a single ObjectInputStream parameter."
+    ],
+    "neg": [
+      "A constructor (private or with `checkAll` true) where every formal parameter is used within the constructor body.",
+      "A method (private or with `checkAll` true, with body, not default, not special readObject, not overridden) where every formal parameter is used within the method body.",
+      "A non-private constructor with an unused formal parameter, when the checker's `checkAll` property is false.",
+      "A non-private method with an unused formal parameter, when the checker's `checkAll` property is false.",
+      "A constructor (private or with `checkAll` true) where every formal parameter is unused but each parameter is named exactly \"_\".",
+      "A constructor (private or with `checkAll` true) where every formal parameter is unused but each parameter name starts with \"ignored\" or \"unused\".",
+      "A method (private or with `checkAll` true, with body, not default, not special readObject, not overridden) where every formal parameter is unused but each parameter is named exactly \"_\".",
+      "A method (private or with `checkAll` true, with body, not default, not special readObject, not overridden) where every formal parameter is unused but each parameter name starts with \"ignored\" or \"unused\".",
+      "A private method named \"readObject\" that declares InvalidObjectException in throws, has exactly one parameter of type ObjectInputStream, and has an unused formal parameter, when `checkAll` is true or the method is private (it is).",
+      "An overridden method (with a body, not default, not the special readObject) with an unused formal parameter, where the method is either private or with `checkAll` true."
+    ]
+  },
+  "category/java/security.xml/InsecureCryptoIv": {
+    "pos": [
+      "Direct instantiation of `javax.crypto.spec.IvParameterSpec` with a compile-time constant argument, such as a literal byte array or a literal string, representing a hardcoded initialization vector."
+    ],
+    "neg": [
+      "A constructor call where the declared type is not `javax.crypto.spec.IvParameterSpec`, e.g., instantiating a different class like `javax.crypto.spec.SecretKeySpec` or `java.lang.String`.",
+      "A constructor call of type `javax.crypto.spec.IvParameterSpec` where all arguments (e.g., the byte array) are non-constant expressions, such as a dynamically generated or randomly generated byte array."
+    ]
+  },
+  "category/java/errorprone.xml/ImplicitSwitchFallThrough": {
+    "pos": [
+      "A switch statement contains a non-final case (or default) branch that has at least one executable statement and may fall through to the next branch, and the branch has no comments of any kind.",
+      "A switch statement contains a non-final case (or default) branch that has at least one executable statement and may fall through to the next branch, and the branch has one or more comments, but none of those comments contain a phrase like \"fall through\" (case-insensitive, with variations).",
+      "A switch statement contains a non-final case (or default) branch that has at least one executable statement and may fall through to the next branch, and the branch has a comment containing a phrase like \"fall through\" (case-insensitive, with variations), but that comment is not located immediately before the next branch's first token (e.g., it is within the current branch's body)."
+    ],
+    "neg": [
+      "A switch branch that is not a fall-through branch (e.g., a case block ending with a `break`, `return`, `throw`, or infinite loop).",
+      "A fall-through switch branch that is the last branch in the switch (e.g., the final `case` or `default` block without a terminating statement).",
+      "A fall-through switch branch (not the last) that dataflow analysis determines cannot fall through to the next branch (e.g., due to an unconditional `return` or `throw` that is not syntactically the last statement but is guaranteed to execute).",
+      "An empty fall-through switch branch (not the last) that dataflow analysis indicates may fall through to the next branch (e.g., a `case` label with no statements, followed by another `case`).",
+      "A fall-through switch branch (not the last, with statements, may fall through) that has a comment indicating intentional fall-through (e.g., `/* falls through */`) placed before the next branch."
+    ]
+  },
+  "category/java/errorprone.xml/StaticEJBFieldShouldBeFinal": {
+    "pos": [
+      "A class implements javax.ejb.SessionBean (or another EJB interface) and declares a static field that is not final."
+    ],
+    "neg": [
+      "A static field (which may be non-final) declared in a class that does not implement any of the EJB-related interfaces (javax.ejb.SessionBean, EJBHome, EJBLocalObject, EJBLocalHome, EJBObject).",
+      "A non-static field (which may be final or non-final) declared in a class that implements at least one EJB-related interface (javax.ejb.SessionBean, EJBHome, EJBLocalObject, EJBLocalHome, EJBObject).",
+      "A static final field declared in a class that implements at least one EJB-related interface (javax.ejb.SessionBean, EJBHome, EJBLocalObject, EJBLocalHome, EJBObject)."
+    ]
+  },
+  "category/java/codestyle.xml/UnnecessaryCast": {
+    "pos": [
+      "A cast expression (not on a lambda/method reference) is redundant because: the operand type equals the cast type; OR the context is missing, the operand is a subtype of the cast type, raw type conditions are met, and no lambda parent exists; OR the context is present (non-invocation, target type known), the operand is context-acceptable and convertible to the cast type, and specific conditional, string concatenation, and numeric operation pitfalls are avoided.",
+      "A lambda expression or method reference is explicitly cast to a type that is identical to the target type required by the surrounding expression context (e.g., assignment to a variable, return statement), and the context is not a method invocation.",
+      "A cast expression is used as the first argument to a method call where the method's formal parameters are not generic (no type variables), the method's declaring type meets erasure conditions, and the operand type of the cast is assignable to that declaring type, making the cast unnecessary."
+    ],
+    "neg": [
+      "Cast expression is the receiver of a method call (e.g., `((Type) obj).method()`), where the operand is not a lambda/method reference, the cast is not trivially redundant (e.g., types differ, not a subtype in missing context, etc.), and the method's formal parameters are non-generic, making the cast potentially necessary for type correctness.",
+      "Cast expression with a lambda or method reference operand, not in a method call context (e.g., standalone assignment or variable declaration), where the cast provides explicit target typing.",
+      "Cast expression is the receiver of a method call with a lambda or method reference operand, where the cast target type differs from the context's target type, and the method's formal parameters are non-generic, making the cast potentially necessary.",
+      "Cast expression is a method argument (not the receiver) with a lambda or method reference operand, in an invocation context (e.g., parameter of a method call), where the cast may be necessary for type compatibility.",
+      "Cast expression with a lambda or method reference operand, in an invocation context but not as a method call argument (e.g., in an assignment or return statement), where the cast is not trivially unnecessary."
+    ]
+  },
+  "category/java/bestpractices.xml/UnusedLabel": {
+    "pos": [
+      "A labeled statement that contains break (or continue) statements, but none of them reference its label (e.g., they are unlabeled or target a different label)."
+    ],
+    "neg": [
+      "A labeled statement (e.g., a labeled loop or block) that has at least one break statement within its scope referencing that label."
+    ]
+  },
+  "category/java/errorprone.xml/UseEqualsToCompareStrings": {
+    "pos": [
+      "Compare two String variables using the '==' operator."
+    ],
+    "neg": [
+      "An infix expression using any operator other than '==' or '!=', such as arithmetic (e.g., +, -), relational (e.g., <, >), or logical (e.g., &&, ||), with operands of any type.",
+      "An infix expression using '==' or '!=' operator where the operands are not both of type java.lang.String (e.g., comparing integers, objects, or a mix of string and non-string)."
+    ]
+  },
+  "category/java/errorprone.xml/AvoidCallingFinalize": {
+    "pos": [
+      "A direct call to `Object.finalize()` (e.g., `finalize();`) from within a method or initializer that is not a `finalize` method declaration.",
+      "A super call to `Object.finalize()` (i.e., `super.finalize();`) from within a method or initializer that is not a `finalize` method declaration (with zero parameters and void return)."
+    ],
+    "neg": [
+      "A Java program containing a call to Object.finalize() with one or more arguments (e.g., Object.finalize(null)).",
+      "A Java program containing a call to super.finalize() with zero arguments inside a void finalize() method with zero parameters.",
+      "A Java program containing a method call where the method name is not \"finalize\".",
+      "A Java program containing a call to a method named \"finalize\" where the method is declared in a class other than java.lang.Object (e.g., a user-defined finalize method)."
+    ]
+  },
+  "category/java/errorprone.xml/NonSerializableClass": {
+    "pos": [
+      "A Serializable class (not Externalizable) lacks valid writeObject/readObject and writeReplace/readResolve method pairs. It contains a non-static, non-transient field of a non-serializable concrete class type (not primitive, Object, interface, abstract class, or type variable). The class does NOT declare a valid serialPersistentFields field (private static final ObjectStreamField[]).",
+      "A Serializable class contains a non-static field named \"serialPersistentFields\". The class also contains a non-static, non-transient field of a non-serializable type (not primitive, Object, interface, abstract class, or type variable). The class does not implement Externalizable and lacks valid writeObject/readObject or writeReplace/readResolve method pairs.",
+      "A Serializable class contains a non-private field named \"serialPersistentFields\". The class also contains a non-static, non-transient field of a non-serializable type (not primitive, Object, interface, abstract class, or type variable). The class does not implement Externalizable and lacks valid writeObject/readObject or writeReplace/readResolve method pairs.",
+      "A Serializable class contains a non-final field named \"serialPersistentFields\". The class also contains a non-static, non-transient field of a non-serializable type (not primitive, Object, interface, abstract class, or type variable). The class does not implement Externalizable and lacks valid writeObject/readObject or writeReplace/readResolve method pairs.",
+      "A Serializable class contains a field named \"serialPersistentFields\" with a type other than java.io.ObjectStreamField[]. The class also contains a non-static, non-transient field of a non-serializable type (not primitive, Object, interface, abstract class, or type variable). The class does not implement Externalizable and lacks valid writeObject/readObject or writeReplace/readResolve method pairs."
+    ],
+    "neg": [
+      "A Serializable (non-Externalizable) class without custom serialization has a private static final ObjectStreamField[] serialPersistentFields that does NOT include the name of a given non-static, non-transient field.",
+      "A Serializable (non-Externalizable) class without custom serialization has a non-static, non-transient field whose type is an abstract class that does not implement Serializable (and is not primitive, Object, or an interface), and either the class lacks serialPersistentFields or the field is listed in it.",
+      "A Serializable (non-Externalizable) class without custom serialization has a non-static, non-transient field of type java.lang.Object (which does not implement Serializable), and either the class lacks serialPersistentFields or the field is listed in it.",
+      "A Serializable (non-Externalizable) class without custom serialization has a non-static, non-transient field of a primitive type, and either the class lacks serialPersistentFields or the field is listed in it.",
+      "A Serializable (non-Externalizable) class without custom serialization has a static field (any type).",
+      "A Serializable (non-Externalizable) class without custom serialization methods has a non-static transient field.",
+      "A Serializable class (not Externalizable) lacks valid writeObject/readObject and writeReplace/readResolve method pairs. It contains a non-static, non-transient field of a non-serializable concrete class type (not primitive, Object, interface, abstract class, or type variable). The class declares a valid serialPersistentFields field (private static final ObjectStreamField[]), and its initializer includes a string literal matching the non-serializable field's name, indicating the field is listed for custom serialization handling.",
+      "A Serializable (non-Externalizable) class has both writeReplace and readResolve methods (any field).",
+      "A Serializable (non-Externalizable) class has both writeObject and readObject methods (any field).",
+      "A class implements Externalizable (and thus Serializable) (any field)."
+    ]
+  },
+  "category/java/multithreading.xml/DontCallThreadRun": {
+    "pos": [
+      "A direct call to the `run()` method on an instance of `java.lang.Thread` (or a subclass) is made, executing the method in the current thread instead of starting a new thread."
+    ],
+    "neg": [
+      "A method call that is not a direct invocation of `java.lang.Thread.run()`."
+    ]
+  },
+  "category/java/bestpractices.xml/UnusedPrivateField": {
+    "pos": [
+      "A class with no `@SuppressWarnings` annotation contains a private field (with a name not in the ignored list) that is declared but never referenced anywhere in the class.",
+      "A class with no `@SuppressWarnings` annotation contains a private field (with a name not in the ignored list) that is annotated with a non-`SuppressWarnings` annotation (e.g., `@Deprecated`) and is never referenced anywhere in the class.",
+      "A class annotated with a non-`SuppressWarnings` annotation (e.g., `@Service`) contains a private field (with a name not in the ignored list) that has no `@SuppressWarnings` annotation and is never referenced anywhere in the class.",
+      "A class annotated with a non-`SuppressWarnings` annotation (e.g., `@Service`) contains a private field (with a name not in the ignored list) that is annotated with a different non-`SuppressWarnings` annotation (e.g., `@Deprecated`) and is never referenced anywhere in the class."
+    ],
+    "neg": [
+      "A type declaration with no private fields (only public, protected, or package-private fields).",
+      "A type declaration where all private fields (not ignored) are used at least once within the compilation unit.",
+      "A type declaration where all private fields are explicitly ignored (e.g., via a checker configuration for field names)."
+    ]
+  },
+  "category/java/errorprone.xml/AvoidCatchingGenericException": {
+    "pos": [
+      "A catch clause catches a generic exception type: Exception, RuntimeException, Throwable, or Error."
+    ],
+    "neg": [
+      "A Java source file containing class types, but with no catch clauses present (e.g., a simple class with method definitions and no try-catch blocks).",
+      "A Java source file containing a try-catch block where the catch clause parameter type is a specific, non-generic exception type (e.g., `catch (IOException e)`).",
+      "A Java source file containing a try-catch block where the catch clause parameter type is a subclass of a prohibited generic exception type (e.g., `catch (FileNotFoundException e)`, a subclass of Exception)."
+    ]
+  },
+  "category/java/errorprone.xml/CompareObjectsWithEquals": {
+    "pos": [
+      "A Java method contains an equality comparison (`==` or `!=`) between two non-null object expressions (e.g., `new Object()`, `\"string\"`, `Integer.valueOf(1)`), where neither operand is a null literal, the types of both operands are not reference-comparing types (e.g., not enums, `Class` objects, or `java.lang.reflect.Type` instances), the comparison is not inside a method named `equals`, and neither operand is a field or variable access with an all-caps name (e.g., `CONSTANT`)."
+    ],
+    "neg": [
+      "An infix expression using any operator other than \"==\" or \"!=\" (e.g., relational, arithmetic, or logical operators) between two object expressions.",
+      "An equality comparison (== or !=) where at least one operand is a null literal.",
+      "An equality comparison (== or !=) where at least one operand is of a primitive type (e.g., int, boolean) or an array type.",
+      "An equality comparison (== or !=) where at least one operand is of a type that inherently compares by reference (e.g., an enum type, java.lang.Class).",
+      "An equality comparison (== or !=) between two non-null object expressions of types that do not compare by reference, located inside a method named \"equals\".",
+      "An equality comparison (== or !=) between two non-null object expressions of types that do not compare by reference, not inside an equals method, where at least one operand is a variable (e.g., local variable, parameter) with a name in all uppercase letters.",
+      "An equality comparison (== or !=) between two non-null object expressions of types that do not compare by reference, not inside an equals method, where at least one operand is a field access with a name in all uppercase letters."
+    ]
+  }
+}
