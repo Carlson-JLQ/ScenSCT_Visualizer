@@ -100,10 +100,11 @@ export function CodeViewer({
       }
       if (!source.content) {
         setStatus("missing");
-        const baseLabel = baseUrl ?? "";
-        const fileLabel = filePath.startsWith("/") ? filePath : `/${filePath}`;
+        const baseLabel = (baseUrl ?? "").replace(/\/+$/, "");
+        const fileLabel = `/${filePath.replace(/^\/+/, "")}`;
+        const joinedPath = `${baseLabel}${fileLabel}`;
         setHtml(
-          `<div class="text-sm text-muted">Source not found at <code class="px-1 py-0.5 rounded bg-ink/[0.04] text-xs font-mono">${baseLabel}${fileLabel}</code></div>`
+          `<div class="text-sm text-muted">Source not found at <code class="px-1 py-0.5 rounded bg-ink/[0.04] text-xs font-mono">${joinedPath}</code></div>`
         );
         return;
       }
