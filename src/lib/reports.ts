@@ -18,13 +18,20 @@ export interface ReportEntry {
 
 import reportManifest from "virtual:report-data";
 
+function buildPublicPath(pathname: string) {
+  const base = import.meta.env.BASE_URL || "/";
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  const normalizedPath = pathname.replace(/^\/+/, "");
+  return `${normalizedBase}${normalizedPath}`;
+}
+
 const reportEntries: ReportEntry[] = (reportManifest as any[]).map((entry) => ({
   tool: entry.tool,
   checker: entry.checker,
   report: entry.report as ReportData,
   metadata: entry.metadata,
   sourcePath: entry.sourcePath,
-  baseUrl: `/output/${entry.tool}/${entry.checker}/`
+  baseUrl: buildPublicPath(`output/${entry.tool}/${entry.checker}/`)
 }));
 
 export function getReports() {

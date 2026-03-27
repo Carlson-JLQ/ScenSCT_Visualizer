@@ -8,7 +8,19 @@ export interface FetchSourceOptions {
   signal?: AbortSignal;
 }
 
-const CANDIDATE_BASES = ["/", "/tests/", "/data/", "/output/"];
+function buildPublicBase(pathname: string) {
+  const base = import.meta.env.BASE_URL || "/";
+  const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+  const normalizedPath = pathname.replace(/^\/+/, "");
+  return `${normalizedBase}${normalizedPath}`;
+}
+
+const CANDIDATE_BASES = [
+  buildPublicBase("/"),
+  buildPublicBase("/tests/"),
+  buildPublicBase("/data/"),
+  buildPublicBase("/output/")
+];
 
 export async function fetchSource(
   filePath: string,
