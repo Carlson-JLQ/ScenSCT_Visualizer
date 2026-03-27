@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-134/ExternallyControlledFormatString.ql",
+    "checker_desc": "This checker detects format string vulnerabilities where a format string argument in a formatting method call is externally controlled (tainted) from a user-provided source.",
+    "checker_dsl": "EXISTS (`format string argument FSA`) {\n  AND {\n    EXISTS (`method call MC`) {\n      AND {\n        (`MC is a StringFormat call`),\n        (`FSA is the format argument of MC`)\n      }\n    },\n    EXISTS (`taint source TS`) {\n      AND {\n        (`TS is a user-provided value source`),\n        EXISTS (`taint flow path P`) {\n          AND {\n            (`P starts from TS`),\n            (`P ends at FSA`),\n            (`P does not pass through nodes with numeric or boolean types`)\n          }\n        }\n      }\n    }\n  }\n}"
+}

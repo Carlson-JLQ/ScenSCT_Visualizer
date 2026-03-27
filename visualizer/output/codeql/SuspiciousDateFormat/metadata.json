@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Likely Typos/SuspiciousDateFormat.ql",
+    "checker_desc": "This checker detects suspicious date format patterns passed to SimpleDateFormat constructors that likely contain typos, specifically patterns containing both \"%Y\" and \"%M\".",
+    "checker_dsl": "EXISTS (`constructor call CC`) {\n  AND {\n    (`CC constructs type with qualified name \"java.text.SimpleDateFormat\"`),\n    EXISTS (`string literal SL`) {\n      AND {\n        (`SL is the argument at index 0 of CC`),\n        EXISTS (`string value SV`) {\n          AND {\n            (`SV is the value of SL`),\n            (`SV contains substring \"%Y\"`),\n            (`SV contains substring \"%M\"`)\n          }\n        }\n      }\n    }\n  }\n}"
+}

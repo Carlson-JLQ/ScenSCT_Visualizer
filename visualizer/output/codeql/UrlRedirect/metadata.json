@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-601/UrlRedirect.ql",
+    "checker_desc": "This checker detects untrusted URL redirection vulnerabilities where user-provided input can flow to a URL redirection sink without proper sanitization.",
+    "checker_dsl": "EXISTS (`taint flow path P`) {\n  AND {\n    EXISTS (`source node S`) {\n      (`S is an instance of ActiveThreatModelSource`)\n    },\n    EXISTS (`sink node K`) {\n      (`K is an instance of UrlRedirectSink`)\n    },\n    (`P is a taint flow path from S to K`),\n    NOT {\n      EXISTS (`barrier node B`) {\n        AND {\n          (`B is an instance of UrlRedirectSanitizer`),\n          (`B lies on the taint flow path P between S and K`)\n        }\n      }\n    }\n  }\n}"
+}

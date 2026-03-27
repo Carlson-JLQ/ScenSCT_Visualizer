@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Comparison/WrongNanComparison.ql",
+    "checker_desc": "This checker detects equality comparisons involving a direct access to a static NaN field of a floating-point type, which will always yield the same result (false for ==, true for !=) because NaN is not equal to itself.",
+    "checker_dsl": "EXISTS (`EqualityTest ET`, `Field F`) {\n  AND {\n    (`one operand of ET is a field access to F`),\n    (`F is declared in a floating-point type (float or double)`),\n    (`F has the name \"NaN\"`)\n  }\n}"
+}

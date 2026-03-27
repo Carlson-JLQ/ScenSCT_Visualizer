@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 import fs from "node:fs";
 function collectReports() {
-    var outputDir = path.resolve(__dirname, "../output");
+    var outputDir = path.resolve(__dirname, "output");
     var entries = [];
     if (!fs.existsSync(outputDir)) {
         return entries;
@@ -209,12 +209,12 @@ export default defineConfig({
         {
             name: "serve-output-folder",
             configureServer: function (server) {
-                var outputDir = path.resolve(__dirname, "../output");
+                var outputDir = path.resolve(__dirname, "output");
                 attachOutputMiddleware(server, outputDir);
                 attachAnnotationSaveMiddleware(server, outputDir);
             },
             configurePreviewServer: function (server) {
-                var outputDir = path.resolve(__dirname, "../output");
+                var outputDir = path.resolve(__dirname, "output");
                 attachOutputMiddleware(server, outputDir);
                 attachAnnotationSaveMiddleware(server, outputDir);
             }

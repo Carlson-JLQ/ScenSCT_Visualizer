@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Concurrency/Escaping.ql",
+    "checker_desc": "This checker detects non-final, non-private, non-volatile fields in classes annotated as thread-safe that may escape proper synchronization, potentially causing concurrency issues.",
+    "checker_dsl": "EXISTS (`field F`, `class C`) {\n  AND {\n    (`class C has an annotation whose type name is \"ThreadSafe\"`),\n    (`field F is declared in class C`),\n    (`field F is not final, not private, and not volatile`)\n  }\n}"
+}

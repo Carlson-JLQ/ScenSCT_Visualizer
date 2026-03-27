@@ -1,0 +1,14 @@
+{
+    "status": true,
+    "report_files": [
+        "src/main/java/scensct/core/pos/PosCase1.java"
+    ],
+    "pass_files": [
+        "src/main/java/scensct/core/neg/NegCase1.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var1.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var2.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var3.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var4.java",
+        "src/main/java/scensct/var/neg/NegCase1_Var5.java"
+    ]
+}

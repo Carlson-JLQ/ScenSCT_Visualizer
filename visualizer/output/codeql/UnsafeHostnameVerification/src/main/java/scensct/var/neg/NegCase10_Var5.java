@@ -1,0 +1,25 @@
+// A HostnameVerifier that always returns true is set as default without a security flag guard but flow passes through a method with name indicating insecure SSL handling should not be flagged.
+package scensct.var.neg;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
+public class NegCase10_Var5 {
+    // Variant 5: Verifier defined as a field, assigned in static block, but setter called inside insecure method
+    private static HostnameVerifier insecureVerifier;
+
+    static {
+        insecureVerifier = (h, s) -> true;
+    }
+
+    static void disableVerification() {
+        if (insecureVerifier != null) {
+            HttpsURLConnection.setDefaultHostnameVerifier(insecureVerifier);
+        }
+    }
+
+    public static void main(String[] args) {
+        disableVerification();
+    }
+}

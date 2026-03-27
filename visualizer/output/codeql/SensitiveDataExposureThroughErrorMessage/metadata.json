@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-209/SensitiveDataExposureThroughErrorMessage.ql",
+    "checker_desc": "This checker detects when sensitive data from a Throwable.getMessage() call flows into an HTTP response, potentially exposing error information to external users.",
+    "checker_dsl": "EXISTS (`MC`, `EXPR`) {\n  AND {\n    EXISTS (`M`) {\n      AND {\n        (`MC is a method call`),\n        (`MC's called method is M`),\n        (`M's name is \"getMessage\"`),\n        (`M has no parameters`),\n        (`M's declaring type has qualified name \"java.lang.Throwable\"`)\n      }\n    },\n    (`there exists a data flow path from MC to EXPR`),\n    (`EXPR is an HTTP response sink`)\n  }\n}"
+}

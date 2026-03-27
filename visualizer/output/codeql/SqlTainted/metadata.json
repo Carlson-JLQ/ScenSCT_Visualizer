@@ -1,0 +1,5 @@
+{
+    "checker_id": "Security/CWE/CWE-089/SqlTainted.ql",
+    "checker_desc": "This checker detects SQL injection vulnerabilities where user-provided data flows unsanitized into a database query sink.",
+    "checker_dsl": "EXISTS (`QueryInjectionSink QIS`) {\n  EXISTS (`QueryInjectionFlow::PathNode sourcePathNode`, `QueryInjectionFlow::PathNode sinkPathNode`) {\n    AND {\n      (`the DataFlow::Node corresponding to sourcePathNode is an instance of the class ActiveThreatModelSource`),\n      (`the DataFlow::Node corresponding to sinkPathNode is an instance of the class QueryInjectionSink`),\n      (`the DataFlow::Node corresponding to sinkPathNode is the same element as the QueryInjectionSink QIS`)\n    }\n  }\n}"
+}

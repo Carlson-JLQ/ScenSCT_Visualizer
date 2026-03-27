@@ -1,0 +1,56 @@
+
+import javax.tools.ToolProvider
+import java.util.concurrent.ConcurrentHashMap
+
+plugins { id 'java' }
+
+def mockSrcDir = file('src/mock-lib/java')
+def testSrcDir = file('src/main/java')
+
+tasks.register('build_mock_lib', JavaCompile) {
+    source = fileTree(dir: mockSrcDir, include: '**/*.java')
+    destinationDirectory.set(file('build/mock-classes'))
+    classpath = files(); options.encoding = 'UTF-8'
+    options.compilerArgs = ['-nowarn', '-Xlint:none']
+}
+
+tasks.register('package_mock_lib', Jar) {
+    dependsOn 'build_mock_lib'
+    from 'build/mock-classes'
+    archiveFileName.set('lib.jar'); destinationDirectory.set(file('build/libs'))
+    onlyIf { file('build/mock-classes').exists() }
+}
+
+tasks.register('build_tests') {
+    dependsOn 'package_mock_lib'
+    inputs.dir testSrcDir; outputs.dir file('build/classes')
+
+    def source = fileTree(dir: testSrcDir, include: '**/*.java')
+    doFirst {
+        print "==> Compiling ${source.files.size()} files under ${testSrcDir} individually..."
+    }
+
+    doLast {
+        def dest = file('build/classes').tap { mkdirs() }
+        def report = file('build/reports/error_record.json').tap { parentFile.mkdirs() }
+        def cp = file('build/libs/lib.jar').with { exists() ? absolutePath : "" }
+        def compiler = ToolProvider.systemJavaCompiler
+        def errors = new ConcurrentHashMap<String, String>()
+        
+        source.files.parallelStream().forEach { File f ->
+            def out = new ByteArrayOutputStream()
+            def args = ['-d', dest.path, '-encoding', 'UTF-8', '-nowarn', '-Xlint:none', 
+                        '-sourcepath', '', f.absolutePath]
+            if (cp) args.addAll(['-cp', cp])
+
+            // run(in, out, err, args...) -> returns 0 on success
+            if (compiler.run(null, null, out, args as String[]) != 0) {
+                errors[f.absolutePath] = out.toString('UTF-8').trim()
+            }
+        }
+
+        report.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(new TreeMap(errors)))
+        def msg = errors.collect { _, v -> "${v}\n" }.join('\n')
+        if (errors) throw new RuntimeException("Failed File Count: #${errors.size()}. See ${report}\n\n${msg}")
+    }
+}

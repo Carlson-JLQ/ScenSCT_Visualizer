@@ -1,0 +1,5 @@
+{
+    "checker_id": "Likely Bugs/Comparison/EqualsArray.ql",
+    "checker_desc": "Detects calls to equals or hashCode methods on array objects, which compare object identity rather than array contents.",
+    "checker_dsl": "EXISTS (`method call MC`) {\n  AND {\n    (`the qualifier type of MC is an array type`),\n    EXISTS (`method M`) {\n      AND {\n        (`M is the method called at MC`),\n        OR {\n          (`M is the hashCode method from Object class`),\n          AND {\n            (`M is the equals method from Object class`),\n            (`the type of the first argument of MC, when viewed as an array type, has a non-empty intersection with the qualifier array type of MC`)\n          }\n        }\n      }\n    }\n  }\n}"
+}

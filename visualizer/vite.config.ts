@@ -16,7 +16,7 @@ interface RawReportEntry {
 }
 
 function collectReports(): RawReportEntry[] {
-  const outputDir = path.resolve(__dirname, "../output");
+  const outputDir = path.resolve(__dirname, "output");
   const entries: RawReportEntry[] = [];
 
   if (!fs.existsSync(outputDir)) {
@@ -267,12 +267,12 @@ export default defineConfig({
     {
       name: "serve-output-folder",
       configureServer(server) {
-        const outputDir = path.resolve(__dirname, "../output");
+        const outputDir = path.resolve(__dirname, "output");
         attachOutputMiddleware(server, outputDir);
         attachAnnotationSaveMiddleware(server, outputDir);
       },
       configurePreviewServer(server) {
-        const outputDir = path.resolve(__dirname, "../output");
+        const outputDir = path.resolve(__dirname, "output");
         attachOutputMiddleware(server, outputDir);
         attachAnnotationSaveMiddleware(server, outputDir);
       }
