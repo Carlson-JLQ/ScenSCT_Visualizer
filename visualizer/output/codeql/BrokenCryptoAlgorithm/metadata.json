@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-327/BrokenCryptoAlgorithm.ql",
-    "checker_desc": "This checker detects insecure cryptographic algorithms (e.g., DES, RC4, ECB mode) being used as the algorithm specification in cryptographic operations.",
-    "checker_dsl": "EXISTS (`path P`) {\n  AND {\n    EXISTS (`literal S`) {\n      (`S is a ShortStringLiteral and its string value matches the insecure algorithm regex pattern and does not match \"RSA/ECB.*\" and does not match \".*\\\\p{IsLowercase} des \\\\p{IsLetter}.*\"`)\n    },\n    EXISTS (`expression E`) {\n      EXISTS (`call C`) {\n        (`E equals C.getAlgoSpec()`)\n      }\n    },\n    (`P has source node with expression S`),\n    (`P has sink node with expression E`),\n    EXISTS (`name N`, `string R`) {\n      AND {\n        OR {\n          (`N equals \"DES\"`),\n          (`N equals \"RC2\"`),\n          (`N equals \"RC4\"`),\n          (`N equals \"ARCFOUR\"`),\n          (`N equals \"RC5\"`),\n          (`N equals \"ECB\"`),\n          (`N equals \"AES/CBC/PKCS[57]Padding\"`)\n        },\n        (`S's string value matches the regex pattern for algorithm name N`)\n      }\n    }\n  }\n}"
-}

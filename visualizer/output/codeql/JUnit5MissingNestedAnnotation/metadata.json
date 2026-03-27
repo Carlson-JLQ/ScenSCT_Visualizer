@@ -1,5 +1,0 @@
-{
-    "checker_id": "Likely Bugs/Frameworks/JUnit/JUnit5MissingNestedAnnotation.ql",
-    "checker_desc": "This checker detects JUnit 5 inner test classes that are missing the required '@Nested' annotation.",
-    "checker_dsl": "EXISTS (`JUnit5InnerTestClass1`) {\n  NOT {\n    (`testClass has annotation with qualified name \"org.junit.jupiter.api.Nested\"`)\n  }\n}"
-}

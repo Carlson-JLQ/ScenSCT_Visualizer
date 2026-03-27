@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-730/ReDoS.ql",
-    "checker_desc": "This checker detects regular expression patterns that may cause exponential backtracking (ReDoS) due to ambiguous nested quantifiers or alternations inside infinite repetitions.",
-    "checker_dsl": "EXISTS (`RegExpTerm t`) {\n  EXISTS (`string pump1`, `State s1`, `string prefixMsg1`) {\n    AND {\n      (`ExponentialBackTracking::hasReDoSResult holds for t, pump1, s1, and prefixMsg1`),\n      NOT { (`the mode of the regex containing t is \"VERBOSE\"`) }\n    }\n  }\n}"
-}

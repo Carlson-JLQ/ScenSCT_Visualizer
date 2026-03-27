@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-614/InsecureCookie.ql",
-    "checker_desc": "This checker detects when a cookie is added to an HTTP response without the 'secure' flag being set, which could allow the cookie to be transmitted over unencrypted connections.",
-    "checker_dsl": "EXISTS (`method call MC`) {\n  AND {\n    (`MC is a call to a method M`),\n    (`M has the exact name \"addCookie\" and is declared in a type T, where T is a class or interface with qualified name \"javax.servlet.http.HttpServletResponse\" or \"jakarta.servlet.http.HttpServletResponse\"`),\n    NOT {\n      EXISTS (`expression E`) {\n        AND {\n          (`E is the argument at index 0 of method call MC`),\n          (`E flows to a secure cookie expression`)\n        }\n      }\n    }\n  }\n}"
-}

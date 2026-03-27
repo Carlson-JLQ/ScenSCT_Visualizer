@@ -1,5 +1,0 @@
-{
-    "checker_id": "Violations of Best Practice/Undesirable Calls/DoNotCallFinalize.ql",
-    "checker_desc": "This checker detects calls to the finalize() method that are not made via super.finalize() within an overriding finalize() method.",
-    "checker_dsl": "EXISTS (`method_call_MC`) {\n  AND {\n    (`the method called by MC is a method named \"finalize\" with zero parameters`),\n    NOT {\n      EXISTS (`callable_CALLER`, `finalize_method_FM`) {\n        (`CALLER is the method containing the method call MC, FM is a method named \"finalize\" with zero parameters, CALLER is a method that overrides FM, and the qualifier of MC is a SuperAccess (i.e., \"super\")`)\n      }\n    }\n  }\n}"
-}

@@ -1,5 +1,0 @@
-{
-    "checker_id": "Likely Bugs/Comparison/RefEqBoxed.ql",
-    "checker_desc": "This checker detects suspicious reference equality comparisons (== or !=) between two operands that are both boxed numeric types, excluding comparisons involving java.lang.Boolean.",
-    "checker_dsl": "EXISTS (`reference equality test RET`) {\n  AND {\n    (`the type of the left operand of RET is a BoxedType`),\n    (`the type of the right operand of RET is a BoxedType`),\n    NOT {\n      EXISTS (`operand O`) {\n        AND {\n          (`O is an operand of RET`),\n          (`the type of O is a RefType`),\n          (`the qualified name of the type of O is \"java.lang.Boolean\"`)\n        }\n      }\n    }\n  }\n}"
-}

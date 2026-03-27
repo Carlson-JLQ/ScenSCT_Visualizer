@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-078/ExecTainted.ql",
-    "checker_desc": "This checker detects command injection vulnerabilities where user-controlled input flows unsanitized into a command execution sink.",
-    "checker_dsl": "EXISTS (`taint flow path P`) {\n  EXISTS (`source node SRC`) {\n    EXISTS (`sink node SNK`) {\n      AND {\n        (`SRC is an instance of ActiveThreatModelSource`),\n        (`SNK is an instance of CommandInjectionSink`),\n        (`P is a taint flow path from SRC to SNK`),\n        NOT {\n          EXISTS (`barrier node B`) {\n            AND {\n              (`B is an instance of CommandInjectionSanitizer`),\n              (`B lies on the taint flow path P`)\n            }\n          }\n        },\n        (`execArg is an argument to a command execution method and is represented by the sink node SNK`)\n      }\n    }\n  }\n}"
-}

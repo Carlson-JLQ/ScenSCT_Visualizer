@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-022/ZipSlip.ql",
-    "checker_desc": "This checker detects unsanitized archive entry names (e.g., from ZipEntry.getName()) flowing into file system operations, potentially allowing Zip Slip attacks through directory traversal sequences like \"..\".",
-    "checker_dsl": "EXISTS (`method call MC`) {\n  EXISTS (`data flow node SINK`) {\n    AND {\n      (`MC is a call to method M named \"getName\"`),\n      EXISTS (`reference type RT`) {\n        AND {\n          (`RT is an ancestor of the declaring type of M`),\n          OR {\n            (`RT has qualified name \"java.util.zip.ZipEntry\"`),\n            (`RT has qualified name \"org.apache.commons.compress.archivers.ArchiveEntry\"`)\n          }\n        }\n      },\n      NOT {\n        EXISTS (`data flow node BARRIER`) {\n          AND {\n            OR {\n              (`BARRIER is a SimpleTypeSanitizer`),\n              (`BARRIER is a PathInjectionSanitizer`)\n            }\n          }\n        }\n      }\n    }\n  }\n}"
-}

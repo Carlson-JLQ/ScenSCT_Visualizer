@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-094/InsecureBeanValidation.ql",
-    "checker_desc": "This checker detects when a custom Bean Validation constraint error message contains unsanitized user input that could lead to Expression Language injection.",
-    "checker_dsl": "AND {\n  EXISTS (`path P`) {\n    (`P is a taint flow path from source node S to sink node T where S is an ActiveThreatModelSource and T is a BeanValidationSink`)\n  },\n  OR {\n    NOT {\n      EXISTS (`method call MC1`) {\n        (`MC1 is a SetMessageInterpolatorCall`)\n      }\n    },\n    EXISTS (`method call MC2`) {\n      AND {\n        (`MC2 is a SetMessageInterpolatorCall`),\n        NOT {\n          (`MC2 is safe`)\n        }\n      }\n    }\n  }\n}"
-}

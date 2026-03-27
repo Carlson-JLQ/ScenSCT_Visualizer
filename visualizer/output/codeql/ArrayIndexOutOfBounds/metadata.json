@@ -1,5 +1,0 @@
-{
-    "checker_id": "Likely Bugs/Collections/ArrayIndexOutOfBounds.ql",
-    "checker_desc": "This checker detects array accesses where the index might be equal to or exceed the array length, indicating a potential ArrayIndexOutOfBoundsException.",
-    "checker_dsl": "EXISTS (`ArrayAccess AA`) {\n  EXISTS (`int K`) {\n    AND {\n      (`K is the minimum integer such that boundedArrayAccess(AA, K) holds`),\n      (`K >= 0`)\n    }\n  }\n}"
-}

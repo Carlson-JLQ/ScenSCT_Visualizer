@@ -1,5 +1,0 @@
-{
-    "checker_id": "Likely Bugs/Arithmetic/InformationLoss.ql",
-    "checker_desc": "This checker detects implicit narrowing casts in compound assignment operators (like += or *=) where the source expression's numeric type is wider than the destination variable's type, potentially causing information loss.",
-    "checker_dsl": "EXISTS (`compound assignment operator A`) {\n  AND {\n    (`A is an assignment addition operator (+=) or assignment multiplication operator (*=)`),\n    EXISTS (`source expression E`) {\n      (`E is the source operand of A`)\n    },\n    EXISTS (`destination type DT`, `source type ST`) {\n      AND {\n        (`DT is the type of the destination operand of A`),\n        (`ST is the type of E`),\n        (`DT is a numeric type (PrimitiveType or BoxedType)`),\n        (`ST is a numeric type (PrimitiveType or BoxedType)`),\n        (`the primitive type underlying ST is wider than the primitive type underlying DT`)\n      }\n    }\n  }\n}"
-}

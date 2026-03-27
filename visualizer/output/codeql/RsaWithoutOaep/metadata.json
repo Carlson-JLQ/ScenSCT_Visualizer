@@ -1,5 +1,0 @@
-{
-    "checker_id": "Security/CWE/CWE-780/RsaWithoutOaep.ql",
-    "checker_desc": "This checker detects when an RSA cipher algorithm specification string that does not contain \"OAEP\" flows to a cryptographic algorithm specification parameter.",
-    "checker_dsl": "EXISTS (`data flow source node SRC`, `data flow sink node SNK`) {\n  AND {\n    EXISTS (`compile-time constant expression SPEC_EXPR`, `string value SPEC`) {\n      AND {\n        (`SPEC_EXPR has string value SPEC`),\n        (`SPEC_EXPR equals SRC as expression`),\n        (`SPEC matches pattern \"RSA/%\"`),\n        NOT { (`SPEC matches pattern \"%OAEP%\"`) }\n      }\n    },\n    EXISTS (`cryptographic algorithm specification CR`) {\n      (`SNK as expression equals CR.getAlgoSpec()`)\n    },\n    (`there exists a data flow path from SRC to SNK`)\n  }\n}"
-}
