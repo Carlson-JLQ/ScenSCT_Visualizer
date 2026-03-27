@@ -1,5 +1,12 @@
 import { AnnotationOutcome } from "./annotations";
 
+function buildApiUrl(pathname: string) {
+    const base = import.meta.env.BASE_URL || "/";
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+    const normalizedPath = pathname.replace(/^\/+/, "");
+    return `${normalizedBase}${normalizedPath}`;
+}
+
 export interface AnnotationEntry {
     filePath: string;
     updatedAt: number;
@@ -16,7 +23,8 @@ export interface CheckerAnnotations {
 export type ToolAnnotations = Record<string, CheckerAnnotations>;
 
 export async function fetchToolAnnotations(tool: string): Promise<ToolAnnotations> {
-    const res = await fetch(`/api/annotations?tool=${encodeURIComponent(tool)}`);
+    const url = buildApiUrl(`api/annotations?tool=${encodeURIComponent(tool)}`);
+    const res = await fetch(url);
     if (!res.ok) {
         throw new Error(`Failed to fetch annotations for ${tool}`);
     }
@@ -29,7 +37,7 @@ export async function saveAnnotation(
     file: string,
     outcome: AnnotationOutcome
 ) {
-    const res = await fetch("/api/annotation", {
+    const res = await fetch(buildApiUrl("api/annotation"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,7 +60,7 @@ export async function deleteAnnotation(
     checker: string,
     file: string
 ) {
-    const res = await fetch("/api/annotation", {
+    const res = await fetch(buildApiUrl("api/annotation"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
