@@ -79,9 +79,10 @@ function attachOutputMiddleware(
   outputDir: string
 ) {
   server.middlewares.use("/output", (req, res, next) => {
-    const urlPath = req.url?.replace(/^\/output/, "") || "";
-    const fsPath = path.join(outputDir, urlPath);
-    const safe = fsPath.startsWith(outputDir);
+    const urlPath = (req.url?.split("?")[0] || "").replace(/^\/output/, "");
+    const relativePath = urlPath.replace(/^\/+/, "");
+    const fsPath = path.resolve(outputDir, relativePath);
+    const safe = fsPath === outputDir || fsPath.startsWith(`${outputDir}${path.sep}`);
     if (!safe || !fs.existsSync(fsPath) || fs.statSync(fsPath).isDirectory()) {
       return next();
     }

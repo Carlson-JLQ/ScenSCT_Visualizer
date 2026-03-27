@@ -60,9 +60,10 @@ function collectReports() {
 function attachOutputMiddleware(server, outputDir) {
     server.middlewares.use("/output", function (req, res, next) {
         var _a;
-        var urlPath = ((_a = req.url) === null || _a === void 0 ? void 0 : _a.replace(/^\/output/, "")) || "";
-        var fsPath = path.join(outputDir, urlPath);
-        var safe = fsPath.startsWith(outputDir);
+        var urlPath = (((_a = req.url) === null || _a === void 0 ? void 0 : _a.split("?")[0]) || "").replace(/^\/output/, "");
+        var relativePath = urlPath.replace(/^\/+/, "");
+        var fsPath = path.resolve(outputDir, relativePath);
+        var safe = fsPath === outputDir || fsPath.startsWith("".concat(outputDir).concat(path.sep));
         if (!safe || !fs.existsSync(fsPath) || fs.statSync(fsPath).isDirectory()) {
             return next();
         }
@@ -85,89 +86,52 @@ function attachAnnotationSaveMiddleware(server, outputDir) {
     }
     // Initialize DB
     var dbPath = path.join(cacheDir, "annotations.sqlite");
-    var db = new Database(dbPath);
-    db.pragma("journal_mode = WAL");
-    // Create table
-    db.exec("\n    CREATE TABLE IF NOT EXISTS annotations (\n      tool TEXT NOT NULL,\n      checker TEXT NOT NULL,\n      file_path TEXT NOT NULL,\n      outcome TEXT NOT NULL,\n      updated_at INTEGER NOT NULL,\n      PRIMARY KEY (tool, checker, file_path)\n    );\n    CREATE INDEX IF NOT EXISTS idx_tool ON annotations(tool);\n  ");
-    // Prepared statements
-    var stmtSelect = db.prepare("\n    SELECT checker, file_path as filePath, outcome, updated_at as updatedAt \n    FROM annotations \n    WHERE tool = ?\n  ");
-    var stmtUpsert = db.prepare("\n    INSERT OR REPLACE INTO annotations (tool, checker, file_path, outcome, updated_at)\n    VALUES (@tool, @checker, @filePath, @outcome, @updatedAt)\n  ");
-    var stmtDelete = db.prepare("\n    DELETE FROM annotations \n    WHERE tool = @tool AND checker = @checker AND file_path = @filePath\n  ");
-    // GET /api/annotations?tool=name
-    server.middlewares.use("/api/annotations", function (req, res, next) {
-        var url = new URL(req.url || "", "http://localhost");
-        if (url.pathname !== "/")
-            return next();
-        if (req.method !== "GET") {
-            res.statusCode = 405;
-            res.end(JSON.stringify({ error: "Method not allowed" }));
-            return;
-        }
-        var tool = url.searchParams.get("tool");
-        if (!tool) {
-            res.statusCode = 400;
-            res.end(JSON.stringify({ error: "Missing tool param" }));
-            return;
-        }
-        try {
-            var rows = stmtSelect.all(tool);
-            var data = {};
-            var outcomes = ["fp", "tp", "fn", "tn", "unk"];
-            for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
-                var row = rows_1[_i];
-                if (!data[row.checker]) {
-                    data[row.checker] = { fp: [], tp: [], fn: [], tn: [], unk: [] };
-                }
-                if (outcomes.includes(row.outcome)) {
-                    data[row.checker][row.outcome].push({
-                        filePath: row.filePath,
-                        updatedAt: row.updatedAt
-                    });
-                }
+    console.log("[SQLite] Initializing database at: ".concat(dbPath));
+    try {
+        var db = new Database(dbPath);
+        db.pragma("journal_mode = WAL");
+        console.log("[SQLite] Database initialized successfully");
+        // Create table
+        db.exec("\n      CREATE TABLE IF NOT EXISTS annotations (\n        tool TEXT NOT NULL,\n        checker TEXT NOT NULL,\n        file_path TEXT NOT NULL,\n        outcome TEXT NOT NULL,\n        updated_at INTEGER NOT NULL,\n        PRIMARY KEY (tool, checker, file_path)\n      );\n      CREATE INDEX IF NOT EXISTS idx_tool ON annotations(tool);\n    ");
+        console.log("[SQLite] Schema created successfully");
+        // Prepared statements
+        var stmtSelect_1 = db.prepare("\n      SELECT checker, file_path as filePath, outcome, updated_at as updatedAt \n      FROM annotations \n      WHERE tool = ?\n    ");
+        var stmtUpsert_1 = db.prepare("\n      INSERT OR REPLACE INTO annotations (tool, checker, file_path, outcome, updated_at)\n      VALUES (@tool, @checker, @filePath, @outcome, @updatedAt)\n    ");
+        var stmtDelete_1 = db.prepare("\n      DELETE FROM annotations \n      WHERE tool = @tool AND checker = @checker AND file_path = @filePath\n    ");
+        // GET /api/annotations?tool=name
+        server.middlewares.use("/api/annotations", function (req, res, next) {
+            var url = new URL(req.url || "", "http://localhost");
+            if (url.pathname !== "/")
+                return next();
+            if (req.method !== "GET") {
+                res.statusCode = 405;
+                res.end(JSON.stringify({ error: "Method not allowed" }));
+                return;
             }
-            res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify(data));
-        }
-        catch (e) {
-            console.error(e);
-            res.statusCode = 500;
-            res.end(JSON.stringify({ error: "DB Error" }));
-        }
-    });
-    // POST /api/annotation
-    server.middlewares.use("/api/annotation", function (req, res, next) {
-        if (req.url !== "/")
-            return next();
-        if (req.method !== "POST") {
-            res.statusCode = 405;
-            res.end(JSON.stringify({ error: "Method not allowed" }));
-            return;
-        }
-        var body = "";
-        req.on("data", function (chunk) { return body += chunk; });
-        req.on("end", function () {
+            var tool = url.searchParams.get("tool");
+            if (!tool) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: "Missing tool param" }));
+                return;
+            }
             try {
-                var payload = JSON.parse(body);
-                var tool = payload.tool, checker = payload.checker, filePath = payload.file, outcome = payload.outcome, updatedAt = payload.updatedAt, action = payload.action;
-                if (!tool || !checker || !filePath) {
-                    res.statusCode = 400;
-                    res.end(JSON.stringify({ error: "Missing fields" }));
-                    return;
-                }
-                if (action === "delete") {
-                    stmtDelete.run({ tool: tool, checker: checker, filePath: filePath });
-                }
-                else {
-                    stmtUpsert.run({
-                        tool: tool,
-                        checker: checker,
-                        filePath: filePath,
-                        outcome: outcome,
-                        updatedAt: updatedAt || Date.now()
-                    });
+                var rows = stmtSelect_1.all(tool);
+                var data = {};
+                var outcomes = ["fp", "tp", "fn", "tn", "unk"];
+                for (var _i = 0, rows_1 = rows; _i < rows_1.length; _i++) {
+                    var row = rows_1[_i];
+                    if (!data[row.checker]) {
+                        data[row.checker] = { fp: [], tp: [], fn: [], tn: [], unk: [] };
+                    }
+                    if (outcomes.includes(row.outcome)) {
+                        data[row.checker][row.outcome].push({
+                            filePath: row.filePath,
+                            updatedAt: row.updatedAt
+                        });
+                    }
                 }
                 res.setHeader("Content-Type", "application/json");
-                res.end(JSON.stringify({ success: true }));
+                res.end(JSON.stringify(data));
             }
             catch (e) {
                 console.error(e);
@@ -175,14 +139,53 @@ function attachAnnotationSaveMiddleware(server, outputDir) {
                 res.end(JSON.stringify({ error: "DB Error" }));
             }
         });
-    });
-}
-function shouldIgnoreWatch(filePath) {
-    var normalized = filePath.split(path.sep).join("/");
-    if (normalized.includes("/output/")) {
-        return !normalized.endsWith("/report.json") && !normalized.endsWith("/metadata.json");
+        // POST /api/annotation
+        server.middlewares.use("/api/annotation", function (req, res, next) {
+            if (req.url !== "/")
+                return next();
+            if (req.method !== "POST") {
+                res.statusCode = 405;
+                res.end(JSON.stringify({ error: "Method not allowed" }));
+                return;
+            }
+            var body = "";
+            req.on("data", function (chunk) { return body += chunk; });
+            req.on("end", function () {
+                try {
+                    var payload = JSON.parse(body);
+                    var tool = payload.tool, checker = payload.checker, filePath = payload.file, outcome = payload.outcome, updatedAt = payload.updatedAt, action = payload.action;
+                    if (!tool || !checker || !filePath) {
+                        res.statusCode = 400;
+                        res.end(JSON.stringify({ error: "Missing fields" }));
+                        return;
+                    }
+                    if (action === "delete") {
+                        stmtDelete_1.run({ tool: tool, checker: checker, filePath: filePath });
+                    }
+                    else {
+                        stmtUpsert_1.run({
+                            tool: tool,
+                            checker: checker,
+                            filePath: filePath,
+                            outcome: outcome,
+                            updatedAt: updatedAt || Date.now()
+                        });
+                    }
+                    res.setHeader("Content-Type", "application/json");
+                    res.end(JSON.stringify({ success: true }));
+                }
+                catch (e) {
+                    console.error(e);
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: "DB Error" }));
+                }
+            });
+        });
     }
-    return false;
+    catch (error) {
+        console.error("[SQLite] Failed to initialize database:", error);
+        throw error;
+    }
 }
 export default defineConfig({
     plugins: [
@@ -230,7 +233,18 @@ export default defineConfig({
             allow: [".."]
         },
         watch: {
-            ignored: shouldIgnoreWatch
+            usePolling: true,
+            interval: 1000,
+            // Ignore everything in the parent project directory.
+            // Vite's root is visualizer/, so its own source files are
+            // watched by default. Individual report.json files outside
+            // the root are still watched via addWatchFile() in the
+            // report-manifest plugin.
+            ignored: [
+                "**/node_modules/**",
+                "**/.git/**",
+                path.resolve(__dirname, "..") + "/*/**",
+            ]
         }
     }
 });
